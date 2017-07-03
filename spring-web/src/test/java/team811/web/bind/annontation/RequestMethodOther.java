@@ -4,7 +4,7 @@ package team811.web.bind.annontation;
  * @create: 2017-07-03
  * @description: 尝试其它枚举写法
  */
-public enum RequestMethod {
+public enum RequestMethodOther {
     GET("GET","GET请求"),
     HEAD("HEAD","HEAD请求"),
     POST("POST","POST请求"),
@@ -17,7 +17,7 @@ public enum RequestMethod {
     private final String key;
     private final String value;
 
-    RequestMethod(String key, String value) {
+    RequestMethodOther(String key, String value) {
         this.key = key;
         this.value = value;
     }
