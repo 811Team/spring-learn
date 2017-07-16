@@ -5,3 +5,8 @@
 .idea/workspace.xml
 spring-core/spring-core.iml
 spring-learn.iml
+target/
+# Eclipse
+# IDEA
+*.iml
+.idea
