@@ -1,12 +1,29 @@
-.idea/compiler.xml
-.idea/encodings.xml
-.idea/libraries/
-.idea/modules.xml
-.idea/workspace.xml
-spring-core/spring-core.iml
-spring-learn.iml
+# 特定文件
+rebel.xml
+.gitignore
+
+# 特定目录
 target/
-# Eclipse
-# IDEA
+classes/
+
+# Eclipse artifacts, including WTP generated manifests
+.classpath
+.project
+
+# IDEA artifacts and output dirs
 *.iml
 .idea
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
