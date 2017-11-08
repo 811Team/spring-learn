@@ -9,6 +9,9 @@
         <module>spring-core</module>
         <module>spring-web</module>
         <module>spring-webmvc</module>
+        <module>spring-context</module>
+        <module>spring-beans</module>
+        <module>spring-jcl</module>
     </modules>
     <packaging>pom</packaging>
 
