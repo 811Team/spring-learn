@@ -6,7 +6,8 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 自定义线程创建
+ * 用于创建新线程实例的自定义类。
+ * 提供各种属性:线程名前缀、线程优先级等等。
  */
 public class CustomizableThreadCreator implements Serializable {
 
@@ -63,6 +64,27 @@ public class CustomizableThreadCreator implements Serializable {
      */
     protected String nextThreadName() {
         return getThreadNamePrefix() + this.threadCount.incrementAndGet();
+    }
+
+    /**
+     * 设置线程名前缀(默认:类名-)
+     *
+     * @param threadNamePrefix
+     */
+    public void setThreadNamePrefix(@Nullable String threadNamePrefix) {
+        this.threadNamePrefix = (threadNamePrefix != null ? threadNamePrefix : getDefaultThreadNamePrefix());
+    }
+
+    /**
+     * 返回默认线程前缀名
+     *
+     * @return String 前缀名
+     */
+    protected String getDefaultThreadNamePrefix() {
+        /**
+         * 获取调用者的类名(不含包名)
+         */
+        return ClassUtils.getShortName(getClass()) + "-";
     }
 
     @Nullable

@@ -14,6 +14,20 @@ import java.util.logging.LogRecord;
  */
 public abstract class LogFactory {
 
+    static {
+        ClassLoader cl = LogFactory.class.getClassLoader();
+        try {
+            /**
+             * 尝试使用ExtendedLogger加载本类(尝试寻找该二进制class)
+             */
+            cl.loadClass("org.apache.logging.log4j.spi.ExtendedLogger");
+            logApi = LogApi.LOG4J;
+        } catch (ClassNotFoundException ex1) {
+            // 当其所有父类都没有加载到该类或者该类不存在的时候抛出该异常
+            // Keep java.util.logging as default
+        }
+    }
+
     /**
      * 日志类型(默认JavaUtilDelegate)
      */
@@ -307,6 +321,8 @@ public abstract class LogFactory {
         private static final String FQCN = JavaUtilLog.class.getName();
 
         /**
+         * 是否手动设置
+         * <p>
          * volatile并发可见性(每次使用该变量的时候会重新去主内存中去读取该变量)
          */
         private volatile boolean resolved;
@@ -315,6 +331,13 @@ public abstract class LogFactory {
             super(level, msg);
         }
 
+        /**
+         * 如果sourceClassName没通过手动设置,
+         * 则获取最后一次调用该类的类名
+         * 否则返回设置类名
+         *
+         * @return String 类全名
+         */
         @Override
         public String getSourceClassName() {
             if (!this.resolved) {
@@ -323,12 +346,24 @@ public abstract class LogFactory {
             return super.getSourceClassName();
         }
 
+        /**
+         * 手动设置 sourceClassName
+         *
+         * @param sourceClassName 类全名
+         */
         @Override
         public void setSourceClassName(String sourceClassName) {
             super.setSourceClassName(sourceClassName);
             this.resolved = true;
         }
 
+        /**
+         * 如果sourceMethodName没通过手动设置,
+         * 则获取最后一次调用该类的类方法名
+         * 否则返回设置类名
+         *
+         * @return String 方法名
+         */
         @Override
         public String getSourceMethodName() {
             if (!this.resolved) {
@@ -337,21 +372,26 @@ public abstract class LogFactory {
             return super.getSourceMethodName();
         }
 
+        /**
+         * 手动设置 sourceMethodName
+         *
+         * @param sourceMethodName 方法名
+         */
         @Override
         public void setSourceMethodName(String sourceMethodName) {
             super.setSourceMethodName(sourceMethodName);
             this.resolved = true;
         }
 
+        /**
+         * 查找最后一次调用本方法的类和方法。
+         */
         private void resolve() {
             // 获取当前线程的运行栈
             StackTraceElement[] stack = new Throwable().getStackTrace();
             String sourceClassName = null;
             String sourceMethodName = null;
             boolean found = false;
-            /**
-             * 查找最后一次调用本方法的类和方法。
-             */
             for (StackTraceElement element : stack) {
                 String className = element.getClassName();
                 if (FQCN.equals(className)) {

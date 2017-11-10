@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadFactory;
 
 /**
  * 作用:
- * 1.通过实现ThreadFactory类,处理线程创建.
+ * 1.创建新线程
  */
 public class CustomizableThreadFactory extends CustomizableThreadCreator
         implements ThreadFactory {
