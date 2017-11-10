@@ -5,13 +5,26 @@ import team811.lang.Nullable;
 import java.util.*;
 
 /**
- * @create: 2017-06-30
- * @description: 知识点:
- * (一)IdentityHashMap:
- * key值可以重复的map对象;
- * 取值时,通过判断key是否为同一个对象，而不是普通HashMap的equals方式判断;
+ * 知识点:
+ * <p>
+ * IdentityHashMap: key值可以重复的map对象,取值时,通过判断key是否为同一个对象，而不是普通HashMap的equals方式判断;
  */
 public abstract class ClassUtils {
+
+    /**
+     * 包的分隔符: '.'
+     */
+    private static final char PACKAGE_SEPARATOR = '.';
+
+    /**
+     * 内部类分隔符
+     */
+    private static final char INNER_CLASS_SEPARATOR = '$';
+
+    /**
+     * CGLIB分隔符
+     */
+    public static final String CGLIB_CLASS_SEPARATOR = "$$";
 
     private static final Map<Class<?>, Class<?>> primitiveWrapperTypeMap = new IdentityHashMap<>(8);
 
@@ -97,5 +110,32 @@ public abstract class ClassUtils {
             result = primitiveTypeNameMap.get(name);
         }
         return result;
+    }
+
+    /**
+     * 获取类名(不含包名)
+     *
+     * @param clazz
+     * @return
+     */
+    public static String getShortName(Class<?> clazz) {
+        return getShortName(getQualifiedName(clazz));
+    }
+
+    public static String getShortName(String className) {
+        Assert.hasLength(className, "Class name must not be empty");
+        int lastDotIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+        int nameEndIndex = className.indexOf(CGLIB_CLASS_SEPARATOR);
+        if (nameEndIndex == -1) {
+            nameEndIndex = className.length();
+        }
+        String shortName = className.substring(lastDotIndex + 1, nameEndIndex);
+        shortName = shortName.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
+        return shortName;
+    }
+
+    public static String getQualifiedName(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        return clazz.getTypeName();
     }
 }
