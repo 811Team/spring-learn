@@ -124,4 +124,9 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     public ListenableFuture<?> submitListenable(Runnable task) {
         return null;
     }
+
+    @Override
+    public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
+        return null;
+    }
 }
