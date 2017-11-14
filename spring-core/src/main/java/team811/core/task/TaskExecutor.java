@@ -8,6 +8,12 @@ import java.util.concurrent.Executor;
  */
 @FunctionalInterface
 public interface TaskExecutor extends Executor {
+
+    /**
+     * 执行任务
+     *
+     * @param task Runnable 对象
+     */
     @Override
     void execute(Runnable task);
 }

@@ -7,4 +7,5 @@ import team811.core.task.AsyncTaskExecutor;
  * @description:
  */
 public interface SchedulingTaskExecutor extends AsyncTaskExecutor {
+    boolean prefersShortLivedTasks();
 }

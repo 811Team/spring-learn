@@ -8,9 +8,27 @@ import team811.lang.Nullable;
  */
 public abstract class Assert {
 
+    /**
+     * 如果对象为空,则抛出异常
+     *
+     * @param object  对象
+     * @param message 异常信息
+     */
     public static void notNull(@Nullable Object object, String message) {
         if (object == null) {
             throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * 断言表达试,如果为false则抛出异常
+     *
+     * @param expression 表达试
+     * @param message    异常信息
+     */
+    public static void state(boolean expression, String message) {
+        if (!expression) {
+            throw new IllegalStateException(message);
         }
     }
 

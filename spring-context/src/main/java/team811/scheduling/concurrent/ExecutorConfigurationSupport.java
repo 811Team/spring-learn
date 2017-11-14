@@ -11,7 +11,7 @@ import java.util.concurrent.*;
 
 /**
  * @create: 2017-11-08
- * @description: 定义配置和的生命周期处理。
+ * @description: 定义线程池配置和的生命周期的处理。
  */
 public abstract class ExecutorConfigurationSupport extends CustomizableThreadFactory
         implements BeanNameAware, InitializingBean, DisposableBean {

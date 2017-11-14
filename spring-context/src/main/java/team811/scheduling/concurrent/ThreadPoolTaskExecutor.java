@@ -2,9 +2,12 @@ package team811.scheduling.concurrent;
 
 import team811.core.task.AsyncListenableTaskExecutor;
 import team811.core.task.TaskDecorator;
+import team811.core.task.TaskRejectedException;
 import team811.lang.Nullable;
 import team811.scheduling.SchedulingTaskExecutor;
+import team811.util.Assert;
 import team811.util.concurrent.ListenableFuture;
+import team811.util.concurrent.ListenableFutureTask;
 
 import java.util.concurrent.*;
 
@@ -60,11 +63,6 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
      */
     private boolean allowCoreThreadTimeOut = false;
 
-    @Override
-    public void execute(Runnable command) {
-
-    }
-
     /**
      * 初始化线程池
      *
@@ -106,6 +104,34 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     }
 
     /**
+     * 执行线程任务
+     *
+     * @param task 任务对象
+     */
+    @Override
+    public void execute(Runnable task) {
+        Executor executor = getThreadPoolExecutor();
+        try {
+            executor.execute(task);
+        } catch (RejectedExecutionException ex) {
+            // 提交任务被拒绝抛出异常
+            throw new TaskRejectedException("Executor [" + executor + "] did not accept task: " + task, ex);
+        }
+
+    }
+
+    /**
+     * 执行线程任务
+     *
+     * @param task         任务对象
+     * @param startTimeout
+     */
+    @Override
+    public void execute(Runnable task, long startTimeout) {
+        execute(task);
+    }
+
+    /**
      * 如果指定队列容量,将返回指定容量的LinkedBlockingQueue对象,
      * 否则返回无缓冲的队列SynchronousQueue对象
      *
@@ -120,13 +146,47 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
         }
     }
 
+    /**
+     * 返回当前对象线程池
+     *
+     * @return ThreadPoolExecutor 线程池
+     * @throws IllegalStateException
+     */
+    public ThreadPoolExecutor getThreadPoolExecutor() throws IllegalStateException {
+        Assert.state(this.threadPoolExecutor != null, "ThreadPoolTaskExecutor not initialized");
+        return this.threadPoolExecutor;
+    }
+
+    /**
+     * 回调任务执行
+     *
+     * @param task
+     * @return
+     */
     @Override
     public ListenableFuture<?> submitListenable(Runnable task) {
-        return null;
+        ExecutorService executor = getThreadPoolExecutor();
+        ListenableFutureTask<Object> future = new ListenableFutureTask<>(task, null);
+        executor.execute(future);
     }
 
     @Override
     public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
         return null;
+    }
+
+    @Override
+    public Future<?> submit(Runnable task) {
+        return null;
+    }
+
+    @Override
+    public <T> Future<T> submit(Callable<T> task) {
+        return null;
+    }
+
+    @Override
+    public boolean prefersShortLivedTasks() {
+        return false;
     }
 }
