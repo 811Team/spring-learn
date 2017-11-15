@@ -104,6 +104,19 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     }
 
     /**
+     * 获取线程池活动线程数量
+     *
+     * @return int
+     */
+    public int getActiveCount() {
+        if (this.threadPoolExecutor == null) {
+            // Not initialized yet: assume no active threads.
+            return 0;
+        }
+        return this.threadPoolExecutor.getActiveCount();
+    }
+
+    /**
      * 执行线程任务
      *
      * @param task 任务对象
@@ -227,5 +240,13 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     public ThreadPoolExecutor getThreadPoolExecutor() throws IllegalStateException {
         Assert.state(this.threadPoolExecutor != null, "ThreadPoolTaskExecutor not initialized");
         return this.threadPoolExecutor;
+    }
+
+    /**
+     * 线程特性(短期)
+     */
+    @Override
+    public boolean prefersShortLivedTasks() {
+        return true;
     }
 }
