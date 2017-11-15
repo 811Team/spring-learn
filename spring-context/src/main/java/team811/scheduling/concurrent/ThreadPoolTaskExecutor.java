@@ -132,6 +132,78 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     }
 
     /**
+     * Runnable异步任务
+     *
+     * @param task 任务对象
+     * @return Future 回调结果(Future的get方法为null)
+     */
+    @Override
+    public Future<?> submit(Runnable task) {
+        ExecutorService executor = getThreadPoolExecutor();
+        try {
+            return executor.submit(task);
+        } catch (RejectedExecutionException ex) {
+            throw new TaskRejectedException("Executor [" + executor + "] did not accept task: " + task, ex);
+        }
+    }
+
+    /**
+     * Callable异步任务
+     *
+     * @param task 任务对象
+     * @return Future 回调结果(Future的get方法为Callable的执行结果)
+     */
+    @Override
+    public <T> Future<T> submit(Callable<T> task) {
+        ExecutorService executor = getThreadPoolExecutor();
+        try {
+            return executor.submit(task);
+        } catch (RejectedExecutionException ex) {
+            throw new TaskRejectedException("Executor [" + executor + "] did not accept task: " + task, ex);
+        }
+    }
+
+    /**
+     * Runnable异步任务
+     *
+     * @param task 任务对象
+     * @return ListenableFuture 回调结果(扩展Future接口)
+     */
+    @Override
+    public ListenableFuture<?> submitListenable(Runnable task) {
+        ExecutorService executor = getThreadPoolExecutor();
+        try {
+            /**
+             * @param task 异步任务
+             * @param result 是否返回特定的结果
+             */
+            ListenableFutureTask<Object> future = new ListenableFutureTask<>(task, null);
+            executor.execute(future);
+            return future;
+        } catch (RejectedExecutionException ex) {
+            throw new TaskRejectedException("Executor [" + executor + "] did not accept task: " + task, ex);
+        }
+    }
+
+    /**
+     * Callable异步任务
+     *
+     * @param task 任务对象
+     * @return ListenableFuture 回调结果(扩展Future接口)
+     */
+    @Override
+    public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
+        ExecutorService executor = getThreadPoolExecutor();
+        try {
+            ListenableFutureTask<T> future = new ListenableFutureTask<>(task);
+            executor.execute(future);
+            return future;
+        } catch (RejectedExecutionException ex) {
+            throw new TaskRejectedException("Executor [" + executor + "] did not accept task: " + task, ex);
+        }
+    }
+
+    /**
      * 如果指定队列容量,将返回指定容量的LinkedBlockingQueue对象,
      * 否则返回无缓冲的队列SynchronousQueue对象
      *
@@ -155,38 +227,5 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     public ThreadPoolExecutor getThreadPoolExecutor() throws IllegalStateException {
         Assert.state(this.threadPoolExecutor != null, "ThreadPoolTaskExecutor not initialized");
         return this.threadPoolExecutor;
-    }
-
-    /**
-     * 回调任务执行
-     *
-     * @param task
-     * @return
-     */
-    @Override
-    public ListenableFuture<?> submitListenable(Runnable task) {
-        ExecutorService executor = getThreadPoolExecutor();
-        ListenableFutureTask<Object> future = new ListenableFutureTask<>(task, null);
-        executor.execute(future);
-    }
-
-    @Override
-    public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
-        return null;
-    }
-
-    @Override
-    public Future<?> submit(Runnable task) {
-        return null;
-    }
-
-    @Override
-    public <T> Future<T> submit(Callable<T> task) {
-        return null;
-    }
-
-    @Override
-    public boolean prefersShortLivedTasks() {
-        return false;
     }
 }
