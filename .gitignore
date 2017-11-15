@@ -1,6 +1,5 @@
 # 特定文件
 rebel.xml
-.gitignore
 
 # 特定目录
 target/
