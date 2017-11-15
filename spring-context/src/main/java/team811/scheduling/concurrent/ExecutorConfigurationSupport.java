@@ -116,7 +116,7 @@ public abstract class ExecutorConfigurationSupport extends CustomizableThreadFac
     }
 
     /**
-     * 对当前线程池进行关闭
+     * 对当前线程池进行关闭(调用该方法,并不会立即进行关闭,但会拒绝提交任务).
      */
     public void shutdown() {
         if (logger.isInfoEnabled()) {

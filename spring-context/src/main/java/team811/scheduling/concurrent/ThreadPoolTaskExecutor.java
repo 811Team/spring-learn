@@ -243,7 +243,7 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     }
 
     /**
-     * 线程特性(短期)
+     * 线程特性(短期任务)
      */
     @Override
     public boolean prefersShortLivedTasks() {
