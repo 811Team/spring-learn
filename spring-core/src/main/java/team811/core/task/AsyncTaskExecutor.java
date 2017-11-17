@@ -9,6 +9,12 @@ import java.util.concurrent.Future;
  */
 public interface AsyncTaskExecutor extends TaskExecutor {
 
+    /**
+     * 执行线程任务
+     *
+     * @param task         Runnable 对象任务类型
+     * @param startTimeout
+     */
     void execute(Runnable task, long startTimeout);
 
     Future<?> submit(Runnable task);
