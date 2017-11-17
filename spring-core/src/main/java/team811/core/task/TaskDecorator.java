@@ -1,10 +1,17 @@
 package team811.core.task;
 
 /**
- * @create: 2017-11-10
- * @description: 任务装饰接口
+ * 任务装饰接口
+ * <p>
+ * 作用:实现该类在任务运行前进行操作
  */
 @FunctionalInterface
 public interface TaskDecorator {
+    /**
+     * 操作任务
+     *
+     * @param runnable Runnable 任务对象
+     * @return Runnable 实际运行任务
+     */
     Runnable decorate(Runnable runnable);
 }
