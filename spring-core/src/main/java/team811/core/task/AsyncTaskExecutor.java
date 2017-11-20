@@ -9,6 +9,9 @@ import java.util.concurrent.Future;
  */
 public interface AsyncTaskExecutor extends TaskExecutor {
 
+    /** 表示立即执行的常量 */
+    long TIMEOUT_IMMEDIATE = 0;
+
     /**
      * 执行线程任务
      *

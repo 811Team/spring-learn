@@ -10,14 +10,10 @@ import java.io.Serializable;
  */
 public abstract class ConcurrencyThrottleSupport implements Serializable {
 
-    /**
-     * 不允许并发常量
-     */
+    /** 不允许并发常量 */
     public static final int NO_CONCURRENCY = 0;
 
-    /**
-     * 允许并发常量
-     */
+    /** 允许并发常量 */
     public static final int UNBOUNDED_CONCURRENCY = -1;
 
     /**
@@ -27,19 +23,13 @@ public abstract class ConcurrencyThrottleSupport implements Serializable {
      */
     protected transient Log logger = LogFactory.getLog(getClass());
 
-    /**
-     * 锁对象
-     */
+    /** 锁对象 */
     private transient Object monitor = new Object();
 
-    /**
-     * 并发量设置
-     */
+    /** 并发量设置 */
     private int concurrencyLimit = UNBOUNDED_CONCURRENCY;
 
-    /**
-     * 已经运行的并发数
-     */
+    /** 实际已经运行的并发数 */
     private int concurrencyCount = 0;
 
     /**
@@ -52,12 +42,13 @@ public abstract class ConcurrencyThrottleSupport implements Serializable {
                     "Currently no invocations allowed - concurrency limit set to NO_CONCURRENCY");
         }
         if (this.concurrencyLimit > 0) {
-            boolean debug = logger.isDebugEnabled();
             synchronized (this.monitor) {
-                /**
-                 * 判断线程是否发生异常
-                 */
+                // 判断线程是否发生异常标识
                 boolean interrupted = false;
+                /**
+                 * 判断当前线程并发个数是否超过设置并发量
+                 */
+                // 如果超过,则无限循环此方法
                 while (this.concurrencyCount >= this.concurrencyLimit) {
                     // 中断抛出异常
                     if (interrupted) {

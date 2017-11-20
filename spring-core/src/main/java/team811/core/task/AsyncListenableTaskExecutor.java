@@ -10,7 +10,19 @@ import java.util.concurrent.Callable;
  */
 public interface AsyncListenableTaskExecutor extends AsyncTaskExecutor {
 
+    /**
+     * 异步任务执行
+     *
+     * @param task Runnable对象
+     * @return ListenableFuture(实际返回为null)
+     */
     ListenableFuture<?> submitListenable(Runnable task);
 
+    /**
+     * 异步任务执行
+     *
+     * @param task Callable对象
+     * @return ListenableFuture(实际返回为Callable任务结果)
+     */
     <T> ListenableFuture<T> submitListenable(Callable<T> task);
 }
