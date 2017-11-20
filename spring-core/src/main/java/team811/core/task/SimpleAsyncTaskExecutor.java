@@ -124,7 +124,7 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
     }
 
     /**
-     * 该对象通过回调 {@link ConcurrencyThrottleAdapter#afterAccess()}
+     * 该对象通过回调{@link ConcurrencyThrottleAdapter#afterAccess()}
      * 完成任务之后唤醒睡眠线程达到控制并发量的作用
      */
     private class ConcurrencyThrottlingRunnable implements Runnable {
