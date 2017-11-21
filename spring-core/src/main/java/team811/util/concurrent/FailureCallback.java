@@ -1,10 +1,14 @@
 package team811.util.concurrent;
 
 /**
- * @create: 2017-11-13
- * @description:
+ * 失败回调接口
  */
 @FunctionalInterface
 public interface FailureCallback {
+    /**
+     * 失败回调方法
+     *
+     * @param ex 异常类型
+     */
     void onFailure(Throwable ex);
 }

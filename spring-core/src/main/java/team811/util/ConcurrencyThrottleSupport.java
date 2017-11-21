@@ -90,4 +90,9 @@ public abstract class ConcurrencyThrottleSupport implements Serializable {
     public boolean isThrottleActive() {
         return (this.concurrencyLimit >= 0);
     }
+
+    public void setConcurrencyLimit(int concurrencyLimit) {
+        this.concurrencyLimit = concurrencyLimit;
+    }
+
 }

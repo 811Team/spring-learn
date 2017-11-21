@@ -1,8 +1,7 @@
 package team811.util.concurrent;
 
 /**
- * @create: 2017-11-13
- * @description:
+ * 根据执行结果,回调接口
  */
 public interface ListenableFutureCallback<T> extends SuccessCallback<T>, FailureCallback {
 }

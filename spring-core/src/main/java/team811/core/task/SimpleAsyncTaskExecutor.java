@@ -5,10 +5,12 @@ import team811.util.Assert;
 import team811.util.ConcurrencyThrottleSupport;
 import team811.util.CustomizableThreadCreator;
 import team811.util.concurrent.ListenableFuture;
+import team811.util.concurrent.ListenableFutureTask;
 
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -28,6 +30,21 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
 
     /** 并发量控制对象 */
     private final ConcurrencyThrottleAdapter concurrencyThrottle = new ConcurrencyThrottleAdapter();
+
+    /** 使用默认线程名创建 */
+    public SimpleAsyncTaskExecutor() {
+        super();
+    }
+
+    /** 使用自定义线程前缀名 */
+    public SimpleAsyncTaskExecutor(String threadNamePrefix) {
+        super(threadNamePrefix);
+    }
+
+    /** 使用外部线程工厂创建 */
+    public SimpleAsyncTaskExecutor(ThreadFactory threadFactory) {
+        this.threadFactory = threadFactory;
+    }
 
     /**
      * 执行线程任务,同时通过{@link ConcurrencyThrottleAdapter}控制并发量
@@ -53,6 +70,15 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
     }
 
     /**
+     * @param task Runnable 对象
+     * @see #execute(Runnable, long)
+     */
+    @Override
+    public void execute(Runnable task) {
+        execute(task, TIMEOUT_INDEFINITE);
+    }
+
+    /**
      * @param task Runnable对象
      * @see #createThread(Runnable)
      * @see java.lang.Thread#start()
@@ -63,19 +89,28 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
         thread.start();
     }
 
+    /**
+     * @param task {@link Runnable}
+     * @return {@code null}  Runnable任务,默认返回空
+     * @see #execute(Runnable, long)
+     */
     @Override
     public Future<?> submit(Runnable task) {
-        return null;
+        FutureTask<Object> future = new FutureTask<>(task, null);
+        execute(future, TIMEOUT_INDEFINITE);
+        return future;
     }
 
+    /**
+     * @param task {@link Callable}
+     * @return 返回线程结果
+     * @see #execute(Runnable, long)
+     */
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        return null;
-    }
-
-    @Override
-    public void execute(Runnable task) {
-
+        FutureTask<T> future = new FutureTask<>(task);
+        execute(future, TIMEOUT_INDEFINITE);
+        return future;
     }
 
     /**
@@ -87,18 +122,28 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
         return this.concurrencyThrottle.isThrottleActive();
     }
 
+    /**
+     * @param task {@link Runnable}
+     * @return {@code null}  Runnable任务,默认返回空
+     * @see #execute(Runnable, long)
+     */
     @Override
     public ListenableFuture<?> submitListenable(Runnable task) {
-        return null;
+        ListenableFutureTask<Object> future = new ListenableFutureTask<>(task, null);
+        execute(future, TIMEOUT_INDEFINITE);
+        return future;
     }
 
+    /**
+     * @param task {@link Callable}
+     * @return 返回线程结果
+     * @see #execute(Runnable, long)
+     */
     @Override
     public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
-        return null;
-    }
-
-    public void setThreadFactory(@Nullable ThreadFactory threadFactory) {
-        this.threadFactory = threadFactory;
+        ListenableFutureTask<T> future = new ListenableFutureTask<>(task);
+        execute(future, TIMEOUT_INDEFINITE);
+        return future;
     }
 
     /**
@@ -143,6 +188,18 @@ public class SimpleAsyncTaskExecutor extends CustomizableThreadCreator
                 concurrencyThrottle.afterAccess();
             }
         }
+    }
+
+    public final void setTaskDecorator(TaskDecorator taskDecorator) {
+        this.taskDecorator = taskDecorator;
+    }
+
+    public void setThreadFactory(@Nullable ThreadFactory threadFactory) {
+        this.threadFactory = threadFactory;
+    }
+
+    public void setConcurrencyLimit(int concurrencyLimit) {
+        this.concurrencyThrottle.setConcurrencyLimit(concurrencyLimit);
     }
 
 }

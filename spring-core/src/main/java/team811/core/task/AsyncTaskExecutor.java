@@ -12,6 +12,9 @@ public interface AsyncTaskExecutor extends TaskExecutor {
     /** 表示立即执行的常量 */
     long TIMEOUT_IMMEDIATE = 0;
 
+    /** 表示没有时间限制 */
+    long TIMEOUT_INDEFINITE = Long.MAX_VALUE;
+
     /**
      * 执行线程任务
      *

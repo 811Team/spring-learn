@@ -41,6 +41,16 @@ public class CustomizableThreadCreator implements Serializable {
      */
     private final AtomicInteger threadCount = new AtomicInteger(0);
 
+    /** 使用默认线程名创建 */
+    public CustomizableThreadCreator() {
+        this.threadNamePrefix = getDefaultThreadNamePrefix();
+    }
+
+    /** 使用自定义线程前缀名 */
+    public CustomizableThreadCreator(@Nullable String threadNamePrefix) {
+        this.threadNamePrefix = (threadNamePrefix != null ? threadNamePrefix : getDefaultThreadNamePrefix());
+    }
+
     /**
      * 自定义创建线程
      *
@@ -81,9 +91,7 @@ public class CustomizableThreadCreator implements Serializable {
      * @return String 前缀名
      */
     protected String getDefaultThreadNamePrefix() {
-        /**
-         * 获取调用者的类名(不含包名)
-         */
+        /** 获取调用者的类名(不含包名) */
         return ClassUtils.getShortName(getClass()) + "-";
     }
 
@@ -103,4 +111,5 @@ public class CustomizableThreadCreator implements Serializable {
     public boolean isDaemon() {
         return this.daemon;
     }
+
 }
