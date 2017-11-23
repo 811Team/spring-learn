@@ -9,6 +9,15 @@ import java.util.concurrent.Future;
  */
 public interface ListenableFuture<T> extends Future<T> {
 
+    /**
+     * 返回回调结果
+     * <p>
+     * 将{@link CompletableFuture#complete(Object)}和{@link CompletableFuture#completeExceptionally(Throwable)}
+     * 引用给{@link #addCallback(SuccessCallback, FailureCallback)}
+     *
+     * @see CompletableFuture#complete(Object)
+     * @see CompletableFuture#completeExceptionally(Throwable)
+     */
     default CompletableFuture<T> completable() {
         CompletableFuture<T> completable = new DelegatingCompletableFuture<>(this);
         addCallback(completable::complete, completable::completeExceptionally);

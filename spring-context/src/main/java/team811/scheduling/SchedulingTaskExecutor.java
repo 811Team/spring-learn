@@ -7,5 +7,8 @@ import team811.core.task.AsyncTaskExecutor;
  * @description:
  */
 public interface SchedulingTaskExecutor extends AsyncTaskExecutor {
+    /**
+     * 是否短期属于短期任务
+     */
     boolean prefersShortLivedTasks();
 }

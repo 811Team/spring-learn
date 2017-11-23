@@ -18,13 +18,25 @@ public interface AsyncTaskExecutor extends TaskExecutor {
     /**
      * 执行线程任务
      *
-     * @param task         Runnable 对象任务类型
+     * @param task         {@code Runnable}
      * @param startTimeout
      */
     void execute(Runnable task, long startTimeout);
 
+    /**
+     * 执行线程任务
+     *
+     * @param task {@code Runnable}
+     * @return 默认 {@code null}
+     */
     Future<?> submit(Runnable task);
 
+    /**
+     * 执行线程任务
+     *
+     * @param task {@code Callable}
+     * @return 线程执行结果
+     */
     <T> Future<T> submit(Callable<T> task);
 
 }
