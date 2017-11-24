@@ -6,6 +6,7 @@ import team811.core.task.TaskRejectedException;
 import team811.lang.Nullable;
 import team811.util.Assert;
 import team811.util.concurrent.ListenableFuture;
+import team811.util.concurrent.ListenableFutureTask;
 
 import java.util.concurrent.*;
 
@@ -29,7 +30,14 @@ public class TaskExecutorAdapter implements AsyncListenableTaskExecutor {
 
     @Override
     public ListenableFuture<?> submitListenable(Runnable task) {
-        return null;
+        try {
+            ListenableFutureTask<Object> future = new ListenableFutureTask<>(task, null);
+            doExecute(this.concurrentExecutor, this.taskDecorator, future);
+            return future;
+        }catch (RejectedExecutionException ex){
+            throw new TaskRejectedException(
+                    "Executor [" + this.concurrentExecutor + "] did not accept task: " + task, ex);
+        }
     }
 
     @Override
@@ -52,7 +60,7 @@ public class TaskExecutorAdapter implements AsyncListenableTaskExecutor {
      * 异步执行任务
      *
      * @param task {@code Runnable}
-     * @return {@code Future} 异步执行结果
+     * @return {@code Future} 异步执行结果 ({@code Future.get() == null})
      * @see #doExecute(Executor, TaskDecorator, Runnable)
      * @see ExecutorService#submit(Runnable)
      */
@@ -73,9 +81,28 @@ public class TaskExecutorAdapter implements AsyncListenableTaskExecutor {
         }
     }
 
+    /**
+     * 异步执行任务
+     *
+     * @param task {@code Runnable}
+     * @return {@code Future} 异步执行结果 ({@code Future.get()})
+     * @see #doExecute(Executor, TaskDecorator, Runnable)
+     * @see ExecutorService#submit(Callable)
+     */
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        return null;
+        try {
+            if (this.taskDecorator == null && this.concurrentExecutor instanceof ExecutorService) {
+                return ((ExecutorService) this.concurrentExecutor).submit(task);
+            } else {
+                FutureTask<T> future = new FutureTask<>(task);
+                doExecute(this.concurrentExecutor, this.taskDecorator, future);
+                return future;
+            }
+        } catch (RejectedExecutionException ex) {
+            throw new TaskRejectedException(
+                    "Executor [" + this.concurrentExecutor + "] did not accept task: " + task, ex);
+        }
     }
 
 

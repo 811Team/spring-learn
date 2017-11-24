@@ -19,46 +19,12 @@ public class ConcurrentTaskExecutor implements AsyncListenableTaskExecutor, Sche
     /** 异步任务执行器 */
     private Executor concurrentExecutor;
 
+
     private TaskExecutorAdapter adaptedExecutor;
 
     public ConcurrentTaskExecutor() {
         // 创建异步任务执行器
         this.concurrentExecutor = Executors.newSingleThreadExecutor();
         this.adaptedExecutor = new TaskExecutorAdapter(this.concurrentExecutor);
-    }
-
-    @Override
-    public ListenableFuture<?> submitListenable(Runnable task) {
-        return null;
-    }
-
-    @Override
-    public <T> ListenableFuture<T> submitListenable(Callable<T> task) {
-        return null;
-    }
-
-    @Override
-    public boolean prefersShortLivedTasks() {
-        return false;
-    }
-
-    @Override
-    public void execute(Runnable task, long startTimeout) {
-
-    }
-
-    @Override
-    public Future<?> submit(Runnable task) {
-        return null;
-    }
-
-    @Override
-    public <T> Future<T> submit(Callable<T> task) {
-        return null;
-    }
-
-    @Override
-    public void execute(Runnable task) {
-
     }
 }

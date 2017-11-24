@@ -10,13 +10,13 @@ import java.util.concurrent.Future;
 public interface ListenableFuture<T> extends Future<T> {
 
     /**
-     * 返回回调结果
+     * 获取线程{@code CompletableFuture}回调结果
      * <p>
      * 将{@link CompletableFuture#complete(Object)}和{@link CompletableFuture#completeExceptionally(Throwable)}
      * 引用给{@link #addCallback(SuccessCallback, FailureCallback)}
      *
-     * @see CompletableFuture#complete(Object)
-     * @see CompletableFuture#completeExceptionally(Throwable)
+     * @see CompletableFuture#complete(Object) 线程结果
+     * @see CompletableFuture#completeExceptionally(Throwable) 线程异常信息
      */
     default CompletableFuture<T> completable() {
         CompletableFuture<T> completable = new DelegatingCompletableFuture<>(this);
