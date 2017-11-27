@@ -3,12 +3,9 @@ package team811.scheduling.concurrent;
 import team811.core.task.AsyncListenableTaskExecutor;
 import team811.core.task.support.TaskExecutorAdapter;
 import team811.scheduling.SchedulingTaskExecutor;
-import team811.util.concurrent.ListenableFuture;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * @create: 2017-11-21

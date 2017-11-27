@@ -1,8 +1,7 @@
 package team811.beans.factory;
 
 /**
- * @create: 2017-11-08
- * @description:
+ * 单例对象销毁标记接口
  */
 public interface DisposableBean {
 
