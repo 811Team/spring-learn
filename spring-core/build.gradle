@@ -1,0 +1,7 @@
+
+description = 'spring-core'
+dependencies {
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version:'3.0.2'
+  compile project(':spring-jcl')
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+}
