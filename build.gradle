@@ -1,26 +1,45 @@
-allprojects  {
-  apply plugin: 'maven'
-
-  group = 'team811'
-  version = '1.0-SNAPSHOT'
+plugins {
+    id "com.gradle.build-scan" version "1.11"
 }
 
-subprojects {
-  apply plugin: 'java'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-  tasks.withType(JavaCompile) {
-  	options.encoding = 'UTF-8'
-  }
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
 
-  
-  repositories {
-    mavenLocal()
-    
-    maven { url "http://repo.maven.apache.org/maven2" }
-  }
+configure(allprojects) { project ->
+    group = 'team811'
 
-  
-  
-  
+    ext {
+        slf4jVersion = "1.7.25"
+        log4jVersion = "2.10.0"
+    }
+
+    apply plugin: "java"
+
+    [compileJava, compileTestJava].each() {
+        it.options.encoding = 'UTF-8'
+        it.sourceCompatibility = 1.8
+        it.targetCompatibility = 1.8
+    }
+
+    compileTestJava {
+        options.compilerArgs += "-parameters"
+    }
+
+    dependencies {
+        testCompile("junit:junit:4.12") {
+            exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        }
+        testCompile("org.mockito:mockito-core:2.12.0") {
+            exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        }
+        testCompile("org.hamcrest:hamcrest-all:1.3")
+
+        compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    }
+}
+
+configure(subprojects){ subproject ->
+
 }

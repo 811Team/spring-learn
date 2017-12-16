@@ -1,8 +1,6 @@
+description = "Spring Context"
 
-description = 'spring-context'
 dependencies {
-  compile project(':spring-core')
-  compile project(':spring-beans')
-  compile project(':spring-jcl')
-    testCompile group: 'junit', name: 'junit', version:'4.12'
+    compile(project(":spring-beans"))
+    compile(project(':spring-core'))
 }

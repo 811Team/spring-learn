@@ -1,5 +1,4 @@
+description = "Spring Beans"
 
-description = 'spring-beans'
 dependencies {
-    testCompile group: 'junit', name: 'junit', version:'4.12'
 }

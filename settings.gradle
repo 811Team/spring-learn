@@ -1,4 +1,5 @@
 rootProject.name = 'spring-learn'
+
 include ':spring-core'
 include ':spring-web'
 include ':spring-webmvc'
@@ -6,9 +7,6 @@ include ':spring-context'
 include ':spring-beans'
 include ':spring-jcl'
 
-project(':spring-core').projectDir = "$rootDir/spring-core" as File
-project(':spring-web').projectDir = "$rootDir/spring-web" as File
-project(':spring-webmvc').projectDir = "$rootDir/spring-webmvc" as File
-project(':spring-context').projectDir = "$rootDir/spring-context" as File
-project(':spring-beans').projectDir = "$rootDir/spring-beans" as File
-project(':spring-jcl').projectDir = "$rootDir/spring-jcl" as File
+rootProject.children.each {project ->
+    project.buildFileName = "${project.name}.gradle"
+}
