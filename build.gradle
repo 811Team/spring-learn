@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url "https://repo.spring.io/plugins-release" }
+    }
+    dependencies {
+        classpath("io.spring.gradle:propdeps-plugin:0.0.8")
+    }
+}
+
 plugins {
     id "com.gradle.build-scan" version "1.11"
 }
@@ -15,6 +24,7 @@ configure(allprojects) { project ->
         log4jVersion = "2.10.0"
     }
 
+    apply plugin: "propdeps"
     apply plugin: "java"
 
     [compileJava, compileTestJava].each() {
@@ -40,6 +50,6 @@ configure(allprojects) { project ->
     }
 }
 
-configure(subprojects){ subproject ->
+configure(subprojects) { subproject ->
 
 }
