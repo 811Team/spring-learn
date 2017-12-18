@@ -37,6 +37,11 @@ configure(allprojects) { project ->
         options.compilerArgs += "-parameters"
     }
 
+    repositories {
+        maven { url "https://repo.spring.io/libs-release" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+
     dependencies {
         testCompile("junit:junit:4.12") {
             exclude group: 'org.hamcrest', module: 'hamcrest-core'
