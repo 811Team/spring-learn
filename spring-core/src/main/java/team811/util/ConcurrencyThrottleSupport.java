@@ -85,7 +85,7 @@ public abstract class ConcurrencyThrottleSupport implements Serializable {
     }
 
     /**
-     * 判断设置的并发量是否大于0
+     * 判断设置的并发量是否大于等于0
      */
     public boolean isThrottleActive() {
         return (this.concurrencyLimit >= 0);
