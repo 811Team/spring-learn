@@ -7,7 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 用于创建新线程实例的自定义类。
- * 提供各种属性:线程名前缀、线程优先级等等。
+ * <p>
+ * 提供线程自定义属性:
+ * 线程名前缀、线程优先级，是否守护线程，所属线程组。
  */
 public class CustomizableThreadCreator implements Serializable {
 

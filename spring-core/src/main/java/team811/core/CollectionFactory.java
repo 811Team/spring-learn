@@ -6,25 +6,7 @@ import team811.util.LinkedMultiValueMap;
 import team811.util.MultiValueMap;
 import team811.util.ReflectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.NavigableSet;
-import java.util.Properties;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Description:公共抽象类CollectionFactory扩展对象
@@ -92,9 +74,11 @@ public abstract class CollectionFactory {
         //判断collection是否是LinkedList或者LinkedList子类的实例
         if (collection instanceof LinkedList) {
             return new LinkedList<E>();
-        } else if (collection instanceof List) {          //判断collection是否是List或者List子类的实例
+            //判断collection是否是List或者List子类的实例
+        } else if (collection instanceof List) {
             return new ArrayList<E>(capacity);
-        } else if (collection instanceof EnumSet) { //判断collection是否是EnumSet或者EnumSet子类的实例
+            //判断collection是否是EnumSet或者EnumSet子类的实例
+        } else if (collection instanceof EnumSet) {
 
             //克隆collectiond的EnumSet转换值，在强转为 Collection
             Collection<E> enumSet = (Collection<E>) EnumSet.copyOf((EnumSet) collection);
