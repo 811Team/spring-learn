@@ -6,7 +6,7 @@ import org.junit.Test;
  * @create: 2017-11-10
  * @description:
  */
-public class ClassUtilsTest {
+public class ClassUtilsTests {
 
     @Test
     public void getShortNameTest() {

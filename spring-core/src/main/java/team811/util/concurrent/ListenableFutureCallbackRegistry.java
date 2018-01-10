@@ -12,21 +12,21 @@ import java.util.Queue;
  */
 public class ListenableFutureCallbackRegistry<T> {
 
-    /** 锁对象 */
-    private final Object mutex = new Object();
-
     /** 成功任务队列 */
     private final Queue<SuccessCallback<? super T>> successCallbacks = new LinkedList<>();
 
     /** 失败任务队列 */
     private final Queue<FailureCallback> failureCallbacks = new LinkedList<>();
 
+    /** 状态(初始化状态) */
+    private State state = State.NEW;
+
     /** 返回结果 */
     @Nullable
     private Object result;
 
-    /** 状态 */
-    private State state = State.NEW;
+    /** 锁对象 */
+    private final Object mutex = new Object();
 
     /**
      * 将回调添加到注册中心

@@ -2,6 +2,7 @@ package team811.util;
 
 import team811.lang.Nullable;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -10,6 +11,15 @@ import java.util.*;
  * IdentityHashMap: key值可以重复的map对象,取值时,通过判断key是否为同一个对象，而不是普通HashMap的equals方式判断;
  */
 public abstract class ClassUtils {
+
+    /** 数组后缀符号 */
+    public static final String ARRAY_SUFFIX = "[]";
+
+    /** 内部数组前缀名 */
+    private static final String INTERNAL_ARRAY_PREFIX = "[";
+
+    /** 非基础数组类型前缀 */
+    private static final String NON_PRIMITIVE_ARRAY_PREFIX = "[L";
 
     /**
      * 包的分隔符: '.'
@@ -56,6 +66,7 @@ public abstract class ClassUtils {
             primitiveTypeToWrapperMap.put(value, key);
             registerCommonClasses(key);
         });
+
         // 该变量将用于存放所有原始类类型,包括:基本类型,基本数组类型,void类类型;
         Set<Class<?>> primitiveTypes = new HashSet<>(32);
         primitiveTypes.addAll(primitiveWrapperTypeMap.values());
@@ -90,10 +101,69 @@ public abstract class ClassUtils {
         }
     }
 
-    public static Class<?> forName(String name, @Nullable ClassLoader classLoader) {
+    /**
+     * 根据类全名加载
+     *
+     * @param name        类全名
+     * @param classLoader 类加载器
+     * @return
+     * @throws ClassNotFoundException
+     * @throws LinkageError
+     */
+    public static Class<?> forName(String name, @Nullable ClassLoader classLoader)
+            throws ClassNotFoundException, LinkageError {
         // 对象为空则抛出IllegalArgumentException;
         Assert.notNull(name, "name必须不为空");
-        return null;
+
+        // 尝试在 primitiveWrapperTypeMap 中获取
+        Class<?> clazz = resolvePrimitiveClassName(name);
+        if (clazz == null) {
+            clazz = commonClassCache.get(name);
+        }
+
+        if (clazz != null) {
+            return clazz;
+        }
+        // 数组类类型
+        if (name.endsWith(ARRAY_SUFFIX)) {
+            String elementClassName = name.substring(0, name.length() - ARRAY_SUFFIX.length());
+            Class<?> elementClass = forName(elementClassName, classLoader);
+            return Array.newInstance(elementClass, 0).getClass();
+        }
+
+        // 非基础数组类型前缀
+        if (name.startsWith(NON_PRIMITIVE_ARRAY_PREFIX) && name.endsWith(";")) {
+            String elementName = name.substring(NON_PRIMITIVE_ARRAY_PREFIX.length(), name.length() - 1);
+            Class<?> elementClass = forName(elementName, classLoader);
+            return Array.newInstance(elementClass, 0).getClass();
+        }
+        // 内部数组
+        if (name.startsWith(INTERNAL_ARRAY_PREFIX)) {
+            String elementName = name.substring(INTERNAL_ARRAY_PREFIX.length());
+            Class<?> elementClass = forName(elementName, classLoader);
+            return Array.newInstance(elementClass, 0).getClass();
+        }
+        // 类加载器
+        ClassLoader clToUse = classLoader;
+        if (clToUse == null) {
+            clToUse = getDefaultClassLoader();
+        }
+        try {
+            return (clToUse != null ? clToUse.loadClass(name) : Class.forName(name));
+        } catch (ClassNotFoundException ex) {
+            // 尝试内部类加载，在类名加上前缀 "$"
+            int lastDotIndex = name.lastIndexOf(PACKAGE_SEPARATOR);
+            if (lastDotIndex != -1) {
+                String innerClassName =
+                        name.substring(0, lastDotIndex) + INNER_CLASS_SEPARATOR + name.substring(lastDotIndex + 1);
+                try {
+                    return (clToUse != null ? clToUse.loadClass(innerClassName) : Class.forName(innerClassName));
+                } catch (ClassNotFoundException ex2) {
+                    // Swallow - let original exception get through
+                }
+            }
+            throw ex;
+        }
     }
 
     /**
@@ -137,5 +207,31 @@ public abstract class ClassUtils {
     public static String getQualifiedName(Class<?> clazz) {
         Assert.notNull(clazz, "Class must not be null");
         return clazz.getTypeName();
+    }
+
+    /**
+     * 获取默认类加载器
+     *
+     * @return 顺序：当前线程类加载器 <- 当前类的加载器 <- 系统类加载器
+     */
+    @Nullable
+    public static ClassLoader getDefaultClassLoader() {
+        ClassLoader cl = null;
+        try {
+            cl = Thread.currentThread().getContextClassLoader();
+        } catch (Throwable ex) {
+            // Cannot access thread context ClassLoader - falling back...
+        }
+        if (cl == null) {
+            cl = ClassUtils.class.getClassLoader();
+            if (cl == null) {
+                try {
+                    cl = ClassLoader.getSystemClassLoader();
+                } catch (Throwable ex) {
+                    // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
+                }
+            }
+        }
+        return cl;
     }
 }
