@@ -124,5 +124,16 @@ public class ListenableFutureCallbackRegistry<T> {
         }
     }
 
+    /**
+     * 当 {@code FutureTask} 结束时没异常时，调用该方法
+     *
+     * @param result
+     */
+    public void success(@Nullable T result) {
+        synchronized (this.mutex) {
+
+        }
+    }
+
     private enum State {NEW, SUCCESS, FAILURE}
 }
