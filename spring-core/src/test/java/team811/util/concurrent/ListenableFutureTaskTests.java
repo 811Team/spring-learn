@@ -21,7 +21,6 @@ public class ListenableFutureTaskTests {
         task.addCallback(new ListenableFutureCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                System.out.println("成功！");
                 assertEquals(s, result);
             }
 

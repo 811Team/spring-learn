@@ -86,7 +86,6 @@ public class ListenableFutureTask<T> extends FutureTask<T> implements Listenable
         } catch (Throwable ex) {
             cause = ex;
         }
-
-
+        this.callbacks.failure(cause);
     }
 }

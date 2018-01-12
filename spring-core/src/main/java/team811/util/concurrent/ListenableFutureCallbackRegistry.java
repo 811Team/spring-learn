@@ -5,10 +5,10 @@ import team811.util.Assert;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.FutureTask;
 
 /**
- * @create: 2017-11-21
- * @description:
+ * 为 {@code ListenableFutureTask} 提供成功、失败回调队列
  */
 public class ListenableFutureCallbackRegistry<T> {
 
@@ -29,9 +29,13 @@ public class ListenableFutureCallbackRegistry<T> {
     private final Object mutex = new Object();
 
     /**
-     * 将回调添加到注册中心
+     * 如果 {@code ListenableFutureTask} 初始化，则将 {@code callback}
+     * 添加到 {@code successCallbacks} 和 {@code failureCallbacks} 队列；
+     * <p>
+     * 如果 {@code ListenableFutureTask} 任务结束调用该方法则调用 {@code successCallbacks} 队列中的内容；
+     * 如果 {@code ListenableFutureTask} 任务发生异常时调用该方法则调用 {@code failureCallbacks} 队列中的内容；
      *
-     * @param callback
+     * @param callback 回调内容
      */
     public void addCallback(ListenableFutureCallback<? super T> callback) {
         Assert.notNull(callback, "'callback' must not be null");
@@ -56,9 +60,10 @@ public class ListenableFutureCallbackRegistry<T> {
     }
 
     /**
-     * 成功回调
+     * 成功回调内容
      *
      * @param callback {@code SuccessCallback} 执行结果
+     * @see SuccessCallback#onSuccess(Object)
      */
     private void notifySuccess(SuccessCallback<? super T> callback) {
         try {
@@ -69,7 +74,7 @@ public class ListenableFutureCallbackRegistry<T> {
     }
 
     /**
-     * 失败回调
+     * 失败回调内容
      *
      * @param callback {@code FailureCallback} 执行结果
      */
@@ -83,7 +88,9 @@ public class ListenableFutureCallbackRegistry<T> {
     }
 
     /**
-     * 将给定的成功回调添加到成功注册中心
+     * 如果 {@code ListenableFutureTask} 初始化，则将 {@code callback}
+     * 添加到 {@code successCallbacks}；
+     * 如果{@code ListenableFutureTask} 结束后，调用该方法，则调用成功内容
      *
      * @param callback {@code SuccessCallback}
      */
@@ -104,7 +111,9 @@ public class ListenableFutureCallbackRegistry<T> {
     }
 
     /**
-     * 将给定的失败回调添加到失败注册中心
+     * 如果 {@code ListenableFutureTask} 初始化，则将 {@code callback}
+     * 添加到 {@code failureCallbacks}；
+     * 如果{@code ListenableFutureTask} 发生异常，调用该方法，则调用失败内容
      *
      * @param callback {@code FailureCallback}
      */
@@ -127,11 +136,32 @@ public class ListenableFutureCallbackRegistry<T> {
     /**
      * 当 {@code FutureTask} 结束时没异常时，调用该方法
      *
-     * @param result
+     * @param result {@link FutureTask#get()}
+     * @see #notifySuccess(SuccessCallback)
      */
     public void success(@Nullable T result) {
         synchronized (this.mutex) {
+            this.state = State.SUCCESS;
+            this.result = result;
+            while (!this.successCallbacks.isEmpty()) {
+                // 返回成功队列中的第一个 SuccessCallback 对象，并删除
+                notifySuccess(this.successCallbacks.poll());
+            }
+        }
+    }
 
+    /**
+     * 当 {@code FutureTask} 发生错误时，调用该方法
+     *
+     * @param ex 错误信息
+     */
+    public void failure(Throwable ex) {
+        synchronized (this.mutex) {
+            this.state = State.FAILURE;
+            this.result = ex;
+            while (!this.failureCallbacks.isEmpty()) {
+                notifyFailure(this.failureCallbacks.poll());
+            }
         }
     }
 
