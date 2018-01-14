@@ -11,7 +11,7 @@ import team811.util.concurrent.ListenableFutureTask;
 import java.util.concurrent.*;
 
 /**
- *
+ * 通过 {@code TaskDecorator} 对象重写 {@code AsyncListenableTaskExecutor}
  */
 public class TaskExecutorAdapter implements AsyncListenableTaskExecutor {
 
