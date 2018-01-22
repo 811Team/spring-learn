@@ -18,13 +18,19 @@ public abstract class LogFactory {
         ClassLoader cl = LogFactory.class.getClassLoader();
         try {
             /**
-             * 尝试使用ExtendedLogger加载本类(尝试寻找该二进制class)
+             * 尝试加载ExtendedLogger的class
              */
             cl.loadClass("org.apache.logging.log4j.spi.ExtendedLogger");
             logApi = LogApi.LOG4J;
         } catch (ClassNotFoundException ex1) {
-            // 当其所有父类都没有加载到该类或者该类不存在的时候抛出该异常
-            // Keep java.util.logging as default
+            try {
+                // SPI
+                cl.loadClass("org.slf4j.spi.LocationAwareLogger");
+                logApi = LogApi.SLF4J_LAL;
+            }catch (ClassNotFoundException ex2) {
+                // 当其所有父类都没有加载到该类或者该类不存在的时候抛出该异常
+                // Keep java.util.logging as default
+            }
         }
     }
 
@@ -62,7 +68,7 @@ public abstract class LogFactory {
      * 日志类型
      */
     private enum LogApi {
-        LOG4J, JUL
+        LOG4J, JUL, SLF4J_LAL;
     }
 
     private static class Log4jDelegate {
