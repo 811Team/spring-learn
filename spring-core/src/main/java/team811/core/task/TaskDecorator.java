@@ -3,7 +3,7 @@ package team811.core.task;
 /**
  * 任务装饰接口
  * <p>
- * 作用:实现该类在任务运行前进行操作
+ * 作用:实现该类在任务运行前后进行操作（如日志，监控）
  */
 @FunctionalInterface
 public interface TaskDecorator {
