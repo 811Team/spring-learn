@@ -20,6 +20,8 @@ import java.util.concurrent.Future;
 
 /**
  * 通过 {@code TaskExecutorAdapter} 执行任务
+ *
+ * 可以通过 {@code TaskExecutorAdapter} 在任务运行前后做某些功能操作
  */
 public class ConcurrentTaskExecutor implements AsyncListenableTaskExecutor, SchedulingTaskExecutor {
 
