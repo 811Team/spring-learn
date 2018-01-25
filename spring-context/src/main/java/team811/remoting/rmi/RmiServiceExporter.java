@@ -46,4 +46,14 @@ public class RmiServiceExporter extends RmiBasedExporter implements Initializing
             this.serverSocketFactory = (RMIServerSocketFactory) this.clientSocketFactory;
         }
     }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+
+    }
+
+    @Override
+    public void destroy() throws Exception {
+
+    }
 }
