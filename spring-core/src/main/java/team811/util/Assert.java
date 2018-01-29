@@ -43,4 +43,16 @@ public abstract class Assert {
             throw new IllegalArgumentException(message);
         }
     }
+
+    /**
+     * 如果字符串含空字符或者为 {@code null} 则抛出异常
+     *
+     * @param text    检查的字符串
+     * @param message 异常信息
+     */
+    public static void hasText(@Nullable String text, String message) {
+        if (!StringUtils.hasText(text)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }
