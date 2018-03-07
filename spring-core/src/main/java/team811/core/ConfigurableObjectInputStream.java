@@ -9,9 +9,7 @@ import java.io.ObjectInputStream;
 
 /**
  * @create: 2017-06-30
- * @description:
- *      继承:ObjectInputStream反序列化对象
- *
+ * @description: 继承:ObjectInputStream反序列化对象
  */
 public class ConfigurableObjectInputStream extends ObjectInputStream {
 
@@ -23,21 +21,21 @@ public class ConfigurableObjectInputStream extends ObjectInputStream {
     private final boolean acceptProxyClasses;
 
     /**
-     * @description: 构造方法
-     * @param in 输入流对象
+     * @param in          输入流对象
      * @param classLoader 类加载器(初始化后只读)
      * @throws IOException
+     * @description: 构造方法
      */
     public ConfigurableObjectInputStream(InputStream in, @Nullable ClassLoader classLoader) throws IOException {
         this(in, classLoader, true);
     }
 
     /**
-     * @description: 构造方法
-     * @param in 输入流对象
-     * @param classLoader 类加载器(初始化后只读)
+     * @param in                 输入流对象
+     * @param classLoader        类加载器(初始化后只读)
      * @param acceptProxyClasses
      * @throws IOException
+     * @description: 构造方法
      */
     public ConfigurableObjectInputStream(InputStream in, @Nullable ClassLoader classLoader, boolean acceptProxyClasses) throws IOException {
         //调用父类构造方法
