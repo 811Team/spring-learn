@@ -9,6 +9,7 @@ import team811.util.Assert;
 import team811.util.concurrent.ListenableFuture;
 import team811.util.concurrent.ListenableFutureTask;
 
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -58,6 +59,9 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
     @Nullable
     private ThreadPoolExecutor threadPoolExecutor;
 
+    private final Map<Runnable, Object> decoratedTaskMap =
+            new ConcurrentReferenceHashMap<>(16, ConcurrentReferenceHashMap.ReferenceType.WEAK);
+
     /**
      * 对空闲核心线程是否进行关闭
      */
@@ -77,14 +81,19 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
         ThreadPoolExecutor executor;
         if (this.taskDecorator != null) {
             /**
-             * 任务装饰对象如果不为空,则重写execute方法创建线程池,调用装饰对象任务
+             * 任务装饰对象如果不为空,则重写 execute 方法创建线程池,调用装饰对象任务.
              */
             executor = new ThreadPoolExecutor(
                     this.corePoolSize, this.maxPoolSize, this.keepAliveSeconds, TimeUnit.SECONDS,
                     queue, threadFactory, rejectedExecutionHandler) {
                 @Override
                 public void execute(Runnable command) {
-                    super.execute(taskDecorator.decorate(command));
+                    Runnable decorated = taskDecorator.decorate(command);
+                    if (decorated != command) {
+                        decoratedTaskMap.put(decorated, command);
+                    }
+                    // 实际执行任务为装饰任务
+                    super.execute(decorated);
                 }
             };
         } else {
@@ -228,6 +237,16 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
             return new LinkedBlockingQueue<>(queueCapacity);
         } else {
             return new SynchronousQueue<>();
+        }
+    }
+
+    @Override
+    protected void cancelRemainingTask(Runnable task) {
+        super.cancelRemainingTask(task);
+        // Cancel associated user-level Future handle as well
+        Object original = this.decoratedTaskMap.get(task);
+        if (original instanceof Future) {
+            ((Future<?>) original).cancel(true);
         }
     }
 

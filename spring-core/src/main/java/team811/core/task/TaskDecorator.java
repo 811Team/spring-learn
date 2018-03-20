@@ -8,7 +8,7 @@ package team811.core.task;
 @FunctionalInterface
 public interface TaskDecorator {
     /**
-     * 操作任务
+     * 重构任务
      *
      * @param runnable Runnable 任务对象
      * @return Runnable 实际运行任务
