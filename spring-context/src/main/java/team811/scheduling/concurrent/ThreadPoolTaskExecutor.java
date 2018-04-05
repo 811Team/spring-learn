@@ -240,6 +240,11 @@ public class ThreadPoolTaskExecutor extends ExecutorConfigurationSupport
         }
     }
 
+    /**
+     * 尝试取消 Future 异步任务
+     *
+     * @param task Future 任务
+     */
     @Override
     protected void cancelRemainingTask(Runnable task) {
         super.cancelRemainingTask(task);

@@ -55,4 +55,16 @@ public abstract class Assert {
             throw new IllegalArgumentException(message);
         }
     }
+
+    /**
+     * expression 为 false 则抛出异常
+     *
+     * @param expression boolean表达式
+     * @param message    异常信息
+     */
+    public static void isTrue(boolean expression, String message) {
+        if (!expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

@@ -143,6 +143,18 @@ public abstract class ExecutorConfigurationSupport extends CustomizableThreadFac
     }
 
     /**
+     * 尝试取消任务(只针对 Future 对象)
+     *
+     * @param task Future 任务
+     * @see Future#cancel(boolean)
+     */
+    protected void cancelRemainingTask(Runnable task) {
+        if (task instanceof Future) {
+            ((Future<?>) task).cancel(true);
+        }
+    }
+
+    /**
      * 根据超时时间等待当前线程池终止
      *
      * @param executor
