@@ -3,12 +3,17 @@ package team811.util;
 import team811.lang.Nullable;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 知识点:
  * <p>
- * IdentityHashMap: key值可以重复的map对象,取值时,通过判断key是否为同一个对象，而不是普通HashMap的equals方式判断;
+ * IdentityHashMap: key值可以重复的map对象,取值时,通过判断 obj1==obj2 判断是否为重复 Key，而不是普通HashMap的equals方式判断;
  */
 public abstract class ClassUtils {
 
