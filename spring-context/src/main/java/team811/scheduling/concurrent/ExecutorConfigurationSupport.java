@@ -136,7 +136,9 @@ public abstract class ExecutorConfigurationSupport extends CustomizableThreadFac
                  *
                  * (该方法通过调用Thread.interrupt()实现,所以也不能保证所有线程能够立即停止)
                  */
-                this.executor.shutdownNow();
+                for (Runnable remainingTask : this.executor.shutdownNow()) {
+                    cancelRemainingTask(remainingTask);
+                }
             }
             awaitTerminationIfNecessary(this.executor);
         }
