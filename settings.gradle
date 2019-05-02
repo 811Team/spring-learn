@@ -10,3 +10,5 @@ include 'spring-jcl'
 rootProject.children.each {project ->
     project.buildFileName = "${project.name}.gradle"
 }
+include 'spring-boot'
+
