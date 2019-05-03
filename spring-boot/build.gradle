@@ -1,16 +1,57 @@
+buildscript {
+    repositories {
+        maven { url "https://repo.spring.io/plugins-release" }
+    }
+    dependencies {
+        classpath("io.spring.gradle:propdeps-plugin:0.0.8")
+    }
+}
+
 plugins {
-    id 'java'
+    id "com.gradle.build-scan" version "2.2.1"
+    id "io.spring.dependency-management" version "1.0.4.RELEASE" apply false
 }
 
-group 'team811'
-version 'unspecified'
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+    publishAlways()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+ext {
+    moduleProjects = subprojects
+}
+
+configure(allprojects) { project ->
+
+    apply plugin: "propdeps"
+    apply plugin: "java"
+
+    group = 'org.shaw'
+    version = '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+configure(moduleProjects) { subproject ->
+
+    apply plugin: "io.spring.dependency-management"
+
+    [compileJava, compileTestJava].each() {
+        it.options.encoding = 'UTF-8'
+        it.sourceCompatibility = 11
+        it.targetCompatibility = 11
+    }
+
+}
+
+configure(rootProject) {
+
+    description = "Src Project"
+
+    configurations.archives.artifacts.clear()
 }
