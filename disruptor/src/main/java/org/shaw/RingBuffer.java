@@ -1,5 +1,8 @@
 package org.shaw;
 
+import org.shaw.util.Util;
+import sun.misc.Unsafe;
+
 /**
  * @Author: shaw
  * @Date: 2019/5/17 10:04
@@ -9,8 +12,9 @@ public final class RingBuffer <E> extends RingBufferFields<E> implements Cursore
 }
 
 abstract class RingBufferFields<E> extends RingBufferPad{
+    private static final Unsafe UNSAFE = Util.getUnsafe();
     static {
-
+        final int scale = UNSAFE.arrayIndexScale(Object[].class);
     }
 }
 
