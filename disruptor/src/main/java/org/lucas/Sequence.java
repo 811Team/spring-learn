@@ -1,6 +1,6 @@
-package org.shaw;
+package org.lucas;
 
-import org.shaw.util.Util;
+import org.lucas.util.Util;
 import sun.misc.Unsafe;
 
 /**
@@ -41,6 +41,65 @@ public class Sequence extends RhsPadding {
     public Sequence(final long initialValue) {
         // 插入StoreStore内存屏障,保证之前写入的数据对其它操作内存可见性.
         UNSAFE.putOrderedLong(this, VALUE_OFFSET, initialValue);
+    }
+
+    /**
+     * @return 获取序列值
+     */
+    public long get() {
+        return value;
+    }
+
+    /**
+     * 设置一个指定值,插入 Store/Store 屏障.
+     *
+     * @param value 新的序列值
+     */
+    public void set(final long value) {
+        UNSAFE.putOrderedLong(this, VALUE_OFFSET, value);
+    }
+
+    /**
+     * 以 volatile 方式写入序列号,插入 Store/Load 屏障.
+     *
+     * @param value 新的序列值
+     */
+    public void setVolatile(final long value) {
+        UNSAFE.putLongVolatile(this, VALUE_OFFSET, value);
+    }
+
+    /**
+     * 执行一个 CAS 操作.
+     *
+     * @param expectedValue 预期值
+     * @param newValue      需要更新的值
+     * @return {@code true} 更新成功
+     */
+    public boolean compareAndSet(final long expectedValue, final long newValue) {
+        return UNSAFE.compareAndSwapLong(this, VALUE_OFFSET, expectedValue, newValue);
+    }
+
+    public long incrementAndGet() {
+        return addAndGet(1L);
+    }
+
+    public long addAndGet(final long increment) {
+        // 当前值
+        long currentValue;
+        // 设置的值
+        long newValue;
+        do {
+            currentValue = get();
+            newValue = currentValue + increment;
+        }
+        // CAS 操作
+        while (!compareAndSet(currentValue, newValue));
+        return newValue;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toString(get());
     }
 }
 

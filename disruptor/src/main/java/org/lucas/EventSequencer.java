@@ -1,4 +1,4 @@
-package org.shaw;
+package org.lucas;
 
 /**
  * 事件序列器

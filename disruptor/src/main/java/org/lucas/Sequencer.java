@@ -1,4 +1,4 @@
-package org.shaw;
+package org.lucas;
 
 /**
  * @Author: shaw
@@ -26,6 +26,27 @@ public interface Sequencer extends Cursored, Sequenced {
      */
     boolean isAvailable(long sequence);
 
+    /**
+     * 将指定序列器器添加到 Disruptor 实列中.
+     *
+     * @param gatingSequences 序列器
+     */
     void addGatingSequences(Sequence... gatingSequences);
+
+    /**
+     * 删除指定序列器
+     *
+     * @param sequence 序列器
+     * @return {@code true} 删除成功
+     */
+    boolean removeGatingSequence(Sequence sequence);
+
+    SequenceBarrier newBarrier(Sequence... sequencesToTrack);
+
+    long getMinimumSequence();
+
+    long getHighestPublishedSequence(long nextSequence, long availableSequence);
+
+    <T> EventPoller<T> newPoller(DataProvider<T> provider, Sequence... gatingSequences);
 
 }

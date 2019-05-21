@@ -1,4 +1,4 @@
-package org.shaw;
+package org.lucas;
 
 /**
  * 序列器
