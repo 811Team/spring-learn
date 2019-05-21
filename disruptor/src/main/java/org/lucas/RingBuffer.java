@@ -56,8 +56,30 @@ abstract class RingBufferFields<E> extends RingBufferPad {
         REF_ARRAY_BASE = UNSAFE.arrayBaseOffset(Object[].class) + 128;
     }
 
-    RingBufferFields(EventFactory<E> eventFactory, Sequencer sequencer) {
+    private final long indexMask;
+    private final Object[] entries;
+    protected final int bufferSize;
+    protected final Sequencer sequencer;
 
+    RingBufferFields(EventFactory<E> eventFactory, Sequencer sequencer) {
+        this.sequencer = sequencer;
+        this.bufferSize = sequencer.getBufferSize();
+
+        if (bufferSize < 1) {
+            throw new IllegalArgumentException("RingBuffer.bufferSize 不能小于1");
+        }
+        if (Integer.bitCount(bufferSize) != 1) {
+            throw new IllegalArgumentException("RingBuffer.bufferSize 必须是2的幂次方");
+        }
+        this.indexMask = bufferSize - 1;
+        this.entries = new Object[sequencer.getBufferSize() + 2 * BUFFER_PAD];
+        fill(eventFactory);
+    }
+
+    private void fill(EventFactory<E> eventFactory) {
+        for (int i = 0; i < bufferSize; i++) {
+            entries[BUFFER_PAD + i] = eventFactory.newInstance();
+        }
     }
 }
 
