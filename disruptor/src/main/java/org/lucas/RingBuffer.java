@@ -44,7 +44,7 @@ abstract class RingBufferFields<E> extends RingBufferPad {
             throw new IllegalStateException("未确定指针大小.");
         }
         BUFFER_PAD = 128 / scale;
-        // Object[] 的基本偏移量
+        // 对象头的基本偏移量
         /**
          *  等于 UNSAFE.arrayBaseOffset(Object[].class) + (BUFFER_PAD << REF_ELEMENT_SHIFT);
          *
