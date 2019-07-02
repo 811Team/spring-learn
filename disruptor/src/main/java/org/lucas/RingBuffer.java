@@ -7,10 +7,17 @@ import sun.misc.Unsafe;
  * @Author: shaw
  * @Date: 2019/5/17 10:04
  */
-public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored, EventSequencer<E>, EventSink<E> {
 
+abstract class RingBufferPad {
+    /**
+     * 缓存行左填充.
+     */
+    protected long p1, p2, p3, p4, p5, p6, p7;
 }
 
+/**
+ * 字段填充
+ */
 abstract class RingBufferFields<E> extends RingBufferPad {
 
     private static final Unsafe UNSAFE = Util.getUnsafe();
@@ -83,9 +90,8 @@ abstract class RingBufferFields<E> extends RingBufferPad {
     }
 }
 
-abstract class RingBufferPad {
-    /**
-     * 缓存行左填充.
-     */
-    protected long p1, p2, p3, p4, p5, p6, p7;
+public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored, EventSequencer<E>, EventSink<E> {
+
 }
+
+
