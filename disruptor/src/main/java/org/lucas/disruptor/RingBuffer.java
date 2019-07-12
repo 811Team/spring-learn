@@ -1,6 +1,6 @@
-package org.lucas;
+package org.lucas.disruptor;
 
-import org.lucas.util.Util;
+import org.lucas.disruptor.util.Util;
 import sun.misc.Unsafe;
 
 /**
@@ -83,14 +83,42 @@ abstract class RingBufferFields<E> extends RingBufferPad {
         fill(eventFactory);
     }
 
+    /**
+     * 填充事件
+     *
+     * @param eventFactory 事件工厂
+     */
     private void fill(EventFactory<E> eventFactory) {
         for (int i = 0; i < bufferSize; i++) {
             entries[BUFFER_PAD + i] = eventFactory.newInstance();
         }
     }
+
+    protected final E elementAt(long sequence) {
+        return (E) UNSAFE.getObject(entries, REF_ARRAY_BASE + ((sequence & indexMask) << REF_ELEMENT_SHIFT));
+    }
 }
 
 public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored, EventSequencer<E>, EventSink<E> {
+
+    /**
+     * 初始游标
+     */
+    public static final long INITIAL_CURSOR_VALUE = Sequence.INITIAL_VALUE;
+
+    /**
+     * 右填充
+     */
+    protected long p1, p2, p3, p4, p5, p6, p7;
+
+    RingBuffer(EventFactory<E> eventFactory, Sequencer sequencer) {
+        super(eventFactory, sequencer);
+    }
+
+    public static <E> RingBuffer<E> createMultiProducer(EventFactory<E> factory, int bufferSize, WaitStrategy waitStrategy) {
+        MultiProducerSequencer sequencer = new MultiProducerSequencer(bufferSize, waitStrategy);
+        return new RingBuffer<E>(factory, sequencer);
+    }
 
 }
 

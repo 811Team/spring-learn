@@ -1,4 +1,4 @@
-package org.lucas;
+package org.lucas.disruptor;
 
 /**
  * @Author: shaw
@@ -6,8 +6,10 @@ package org.lucas;
  */
 @FunctionalInterface
 public interface Cursored {
+
     /**
-     * @return 当前 cursored 的值
+     * @return 当前游标
      */
     long getCursor();
+
 }

@@ -1,7 +1,7 @@
 package org.lucas;
 
 import org.junit.Test;
-import org.lucas.util.Util;
+import org.lucas.disruptor.util.Util;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
 import sun.misc.Unsafe;

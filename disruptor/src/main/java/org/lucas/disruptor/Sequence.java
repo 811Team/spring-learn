@@ -1,6 +1,6 @@
-package org.lucas;
+package org.lucas.disruptor;
 
-import org.lucas.util.Util;
+import org.lucas.disruptor.util.Util;
 import sun.misc.Unsafe;
 
 /**

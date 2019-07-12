@@ -1,4 +1,4 @@
-package org.lucas;
+package org.lucas.disruptor;
 
 import java.util.concurrent.ThreadFactory;
 

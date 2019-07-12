@@ -1,4 +1,4 @@
-package org.lucas;
+package org.lucas.disruptor;
 
 /**
  * @Author: shaw
@@ -6,5 +6,7 @@ package org.lucas;
  */
 @FunctionalInterface
 public interface DataProvider<T> {
+
     T get(long sequence);
+
 }

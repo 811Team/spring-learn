@@ -1,4 +1,4 @@
-package org.lucas.util;
+package org.lucas.disruptor.util;
 
 import sun.misc.Unsafe;
 

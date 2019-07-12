@@ -1,4 +1,4 @@
-package org.lucas;
+package org.lucas.disruptor;
 
 /**
  * 序列器
