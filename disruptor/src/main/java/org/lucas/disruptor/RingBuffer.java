@@ -39,7 +39,8 @@ abstract class RingBufferFields<E> extends RingBufferPad {
     private static final int BUFFER_PAD;
 
     static {
-        // 获取对象的增量长度.访问该类型为 Object[] 的第N个元素的话,偏移量offset应该是arrayOffset+N*arrayScale。
+        // 获取对象的增量长度.
+        // 访问该类型为 Object[] 的第N个元素的话,偏移量offset应该是：arrayOffset(数组起始偏移量) + N * arrayScale（元素增量数值）。
         final int scale = UNSAFE.arrayIndexScale(Object[].class);
         if (4 == scale) {
             // 2的2次幂
