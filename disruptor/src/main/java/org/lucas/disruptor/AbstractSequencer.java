@@ -21,12 +21,12 @@ public abstract class AbstractSequencer implements Sequencer {
     protected final WaitStrategy waitStrategy;
 
     /**
-     * 游标计数器
+     * 序列游标
      */
     protected final Sequence cursor = new Sequence(Sequencer.INITIAL_CURSOR_VALUE);
 
     /**
-     * 计数器
+     * 序列游标数组
      */
     protected volatile Sequence[] gatingSequences = new Sequence[0];
 
@@ -87,7 +87,7 @@ public abstract class AbstractSequencer implements Sequencer {
      * 为该序列创建一个事件轮询器，该事件轮询器将使用提供的数据提供程序和门控序列。
      *
      * @param dataProvider    当前事件轮询器的数据源
-     * @param gatingSequences 计数器
+     * @param gatingSequences 序列游标
      * @return 将在此环缓冲区和提供的序列上进行门控的轮询器。
      */
     @Override

@@ -45,9 +45,9 @@ public final class Util {
     }
 
     /**
-     * 比较计数器中最小的游标
+     * 获取最小游标值
      *
-     * @param sequences 计数器
+     * @param sequences 序列游标
      * @param minimum   被比较的游标
      * @return 最小游标值
      */

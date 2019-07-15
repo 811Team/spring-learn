@@ -39,9 +39,9 @@ public class Sequence extends RhsPadding {
     }
 
     public Sequence(final long initialValue) {
-        // 不保证写入后的数据可见性。
+        // 插入 Store/Store 内存屏障,不保证写入后的数据可见性。
         UNSAFE.putOrderedLong(this, VALUE_OFFSET, initialValue);
-        // 插入StoreStore内存屏障,
+
     }
 
     /**
@@ -52,27 +52,34 @@ public class Sequence extends RhsPadding {
     }
 
     /**
-     * 设置一个指定值,插入 Store/Store 屏障,但不保证写入的值会立即被其它线程发现。
+     * 执行此序列的有序写入。
+     * <p>
+     * 目的是在此写入与任何以前的存储之间设置 Store/Store 屏障，
+     * 但不保证写入的值会立即被其它线程发现。
      *
      * @param value 新的序列值
      */
     public void set(final long value) {
+        // 插入Store/Store内存屏障。
         UNSAFE.putOrderedLong(this, VALUE_OFFSET, value);
-        // 插入StoreStore内存屏障,
     }
 
     /**
-     * 以 volatile 方式写入序列号,插入 Store/Load 屏障.
+     * 以 volatile 方式写入序列号。
+     * <p>
+     * 目的是在此写入与任何先前的写入之间设置 Store/Store 屏障，
+     * 在此写入与任何后续的 volatile 读取之间设置 Store/Load 屏障。
      *
      * @param value 新的序列值
      */
     public void setVolatile(final long value) {
+        // 插入 Store/Store 屏障
         UNSAFE.putLongVolatile(this, VALUE_OFFSET, value);
         // 插入 Store/Load 屏障
     }
 
     /**
-     * 执行一个 CAS 操作.
+     * 执行一个 CAS 操作，修改游标的值.
      *
      * @param expectedValue 预期值
      * @param newValue      需要更新的值
