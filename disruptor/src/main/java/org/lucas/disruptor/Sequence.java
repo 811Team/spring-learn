@@ -39,8 +39,9 @@ public class Sequence extends RhsPadding {
     }
 
     public Sequence(final long initialValue) {
-        // 插入StoreStore内存屏障,保证之前写入的数据对其它操作内存可见性.
+        // 不保证写入后的数据可见性。
         UNSAFE.putOrderedLong(this, VALUE_OFFSET, initialValue);
+        // 插入StoreStore内存屏障,
     }
 
     /**
