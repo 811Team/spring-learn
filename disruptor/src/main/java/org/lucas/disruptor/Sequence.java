@@ -58,6 +58,7 @@ public class Sequence extends RhsPadding {
      */
     public void set(final long value) {
         UNSAFE.putOrderedLong(this, VALUE_OFFSET, value);
+        // 插入StoreStore内存屏障,
     }
 
     /**
@@ -67,6 +68,7 @@ public class Sequence extends RhsPadding {
      */
     public void setVolatile(final long value) {
         UNSAFE.putLongVolatile(this, VALUE_OFFSET, value);
+        // 插入 Store/Load 屏障
     }
 
     /**
