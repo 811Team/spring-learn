@@ -1,8 +1,7 @@
 package org.lucas.disruptor;
 
 /**
- * @Author: shaw
- * @Date: 2019/5/17 14:06
+ * 序列器
  */
 public interface Sequencer extends Cursored, Sequenced {
 

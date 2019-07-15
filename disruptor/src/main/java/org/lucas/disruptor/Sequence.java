@@ -51,7 +51,7 @@ public class Sequence extends RhsPadding {
     }
 
     /**
-     * 设置一个指定值,插入 Store/Store 屏障.
+     * 设置一个指定值,插入 Store/Store 屏障,但不保证写入的值会立即被其它线程发现。
      *
      * @param value 新的序列值
      */
