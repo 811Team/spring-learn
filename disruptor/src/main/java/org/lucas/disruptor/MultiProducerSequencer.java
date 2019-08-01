@@ -117,6 +117,7 @@ public final class MultiProducerSequencer extends AbstractSequencer {
                     LockSupport.parkNanos(1);
                     continue;
                 }
+                // 插入Store/Store内存屏障。
                 gatingSequenceCache.set(gatingSequence);
             } else if (cursor.compareAndSet(current, next)) {
                 break;
