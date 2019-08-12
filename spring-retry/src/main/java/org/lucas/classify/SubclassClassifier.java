@@ -69,4 +69,11 @@ public class SubclassClassifier<T, C> implements Classifier<T, C> {
         return value;
     }
 
+    /**
+     * @return 默认值
+     */
+    final public C getDefault() {
+        return this.defaultValue;
+    }
+
 }
