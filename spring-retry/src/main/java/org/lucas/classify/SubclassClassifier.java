@@ -15,14 +15,14 @@ public class SubclassClassifier<T, C> implements Classifier<T, C> {
         this(null);
     }
 
-    public SubclassClassifier(C defaultValue) {
-        this(new HashMap<>(), defaultValue);
-    }
-
     public SubclassClassifier(Map<Class<? extends T>, C> typeMap, C defaultValue) {
         super();
         this.classified = new ConcurrentHashMap<>(typeMap);
         this.defaultValue = defaultValue;
+    }
+
+    public SubclassClassifier(C defaultValue) {
+        this(new HashMap<>(), defaultValue);
     }
 
     @Override
@@ -70,10 +70,18 @@ public class SubclassClassifier<T, C> implements Classifier<T, C> {
     }
 
     /**
-     * @return 默认值
+     * @return 获取默认值
      */
     final public C getDefault() {
         return this.defaultValue;
+    }
+
+    public void setTypeMap(Map<Class<? extends T>, C> map) {
+        this.classified = new ConcurrentHashMap<Class<? extends T>, C>(map);
+    }
+
+    protected Map<Class<? extends T>, C> getClassified() {
+        return this.classified;
     }
 
 }
