@@ -16,6 +16,9 @@ public interface RetryContext extends AttributeAccessor {
 
     void setExhaustedOnly();
 
+    /**
+     * @return 是否终止
+     */
     boolean isExhaustedOnly();
 
     RetryContext getParent();

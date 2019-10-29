@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 public interface RetryPolicy extends Serializable {
 
+    /**
+     * 判断是否能重试
+     *
+     * @param context {@code RetryContext}
+     * @return {@code true} 可以重试
+     */
     boolean canRetry(RetryContext context);
 
     /**
@@ -16,5 +22,11 @@ public interface RetryPolicy extends Serializable {
 
     void close(RetryContext context);
 
+    /**
+     * 保存异常信息
+     *
+     * @param context   RetryContext
+     * @param throwable Throwable
+     */
     void registerThrowable(RetryContext context, Throwable throwable);
 }

@@ -63,12 +63,6 @@ public class SimpleRetryPolicy implements RetryPolicy {
         this.retryableClassifier.setTraverseCauses(traverseCauses);
     }
 
-    /**
-     * 判断是否能重试
-     *
-     * @param context {@code RetryContext}
-     * @return {@code true} 可以重试
-     */
     @Override
     public boolean canRetry(RetryContext context) {
         Throwable t = context.getLastThrowable();
