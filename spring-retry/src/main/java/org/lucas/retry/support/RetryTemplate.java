@@ -60,6 +60,10 @@ public class RetryTemplate implements RetryOperations {
         return doExecute(retryCallback, recoveryCallback, retryState);
     }
 
+    public void setRetryPolicy(RetryPolicy retryPolicy) {
+        this.retryPolicy = retryPolicy;
+    }
+
     protected <T, E extends Throwable> T doExecute(RetryCallback<T, E> retryCallback, RecoveryCallback<T> recoveryCallback,
                                                    RetryState state) throws E, ExhaustedRetryException {
         RetryPolicy retryPolicy = this.retryPolicy;
