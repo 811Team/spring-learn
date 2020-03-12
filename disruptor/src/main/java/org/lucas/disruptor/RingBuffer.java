@@ -52,15 +52,15 @@ abstract class RingBufferFields<E> extends RingBufferPad {
             throw new IllegalStateException("未确定指针大小.");
         }
         BUFFER_PAD = 128 / scale;
-        // 对象头的基本偏移量
-        /**
-         *  等于 UNSAFE.arrayBaseOffset(Object[].class) + (BUFFER_PAD << REF_ELEMENT_SHIFT);
-         *
-         *  REF_ARRAY_BASE是整个数组的起始地址+用于缓存行填充的那些空位的偏移量
-         *  BUFFER_PAD << REF_ELEMENT_SHIFT表示BUFFER_PAD个引用的占用字节数
-         *  比如一个引用占用字节数是4，那么REF_ELEMENT_SHIFT是2，
-         *  BUFFER_PAD << REF_ELEMENT_SHIFT就相当于BUFFER_PAD * 4
-         */
+
+
+        //  对象头的基本偏移量
+        //  等于 UNSAFE.arrayBaseOffset(Object[].class) + (BUFFER_PAD << REF_ELEMENT_SHIFT);
+        //
+        //  REF_ARRAY_BASE是整个数组的起始地址+用于缓存行填充的那些空位的偏移量
+        //  BUFFER_PAD << REF_ELEMENT_SHIFT表示BUFFER_PAD个引用的占用字节数
+        //  比如一个引用占用字节数是4，那么REF_ELEMENT_SHIFT是2，
+        //  BUFFER_PAD << REF_ELEMENT_SHIFT 就相当于 BUFFER_PAD * 4
         REF_ARRAY_BASE = UNSAFE.arrayBaseOffset(Object[].class) + 128;
     }
 
@@ -119,6 +119,10 @@ public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored
     public static <E> RingBuffer<E> createMultiProducer(EventFactory<E> factory, int bufferSize, WaitStrategy waitStrategy) {
         MultiProducerSequencer sequencer = new MultiProducerSequencer(bufferSize, waitStrategy);
         return new RingBuffer<E>(factory, sequencer);
+    }
+
+    public static <E> RingBuffer<E> createMultiProducer(EventFactory<E> factory, int bufferSize) {
+        return createMultiProducer(factory, bufferSize, new BlockingWaitStrategy());
     }
 
 }
