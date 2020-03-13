@@ -22,7 +22,7 @@ final class ProcessingSequenceBarrier implements SequenceBarrier {
 
     @Override
     public long waitFor(long sequence) throws AlertException, InterruptedException, TimeoutException {
-        // 检查 alerted 是否为true;
+        // 检查 alerted 是否为false;
         checkAlert();
         long availableSequence = waitStrategy.waitFor(sequence, cursorSequence, dependentSequence, this);
         if (availableSequence < sequence) {

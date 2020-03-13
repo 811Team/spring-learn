@@ -1,5 +1,7 @@
 package org.lucas.disruptor;
 
+import org.lucas.disruptor.util.ThreadHints;
+
 public class BlockingWaitStrategy implements WaitStrategy {
 
     private final Object mutex = new Object();
@@ -20,5 +22,20 @@ public class BlockingWaitStrategy implements WaitStrategy {
             barrier.checkAlert();
             ThreadHints.onSpinWait();
         }
+        return availableSequence;
+    }
+
+    @Override
+    public void signalAllWhenBlocking() {
+        synchronized (mutex) {
+            mutex.notifyAll();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "BlockingWaitStrategy{" +
+                "mutex=" + mutex +
+                '}';
     }
 }

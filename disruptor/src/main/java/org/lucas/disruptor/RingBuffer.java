@@ -125,6 +125,11 @@ public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored
         return createMultiProducer(factory, bufferSize, new BlockingWaitStrategy());
     }
 
+    @Override
+    public E get(long sequence) {
+        return elementAt(sequence);
+    }
+
 }
 
 
