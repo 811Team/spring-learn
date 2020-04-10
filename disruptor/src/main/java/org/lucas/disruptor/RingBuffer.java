@@ -130,6 +130,21 @@ public final class RingBuffer<E> extends RingBufferFields<E> implements Cursored
         return elementAt(sequence);
     }
 
+    @Override
+    public long next() {
+        return sequencer.next();
+    }
+
+    @Override
+    public long next(int n) {
+        return sequencer.next(n);
+    }
+
+    @Override
+    public long tryNext() throws InsufficientCapacityException {
+        return sequencer.tryNext();
+    }
+
 }
 
 

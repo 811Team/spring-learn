@@ -5,6 +5,10 @@ import sun.misc.Unsafe;
 
 import java.util.concurrent.locks.LockSupport;
 
+/**
+ * {@link Sequencer#getCursor()}:调用{@link Sequencer#next()}后更新游标值，
+ * 以确定可以读取的最高可用序列，然后使用{@link Sequencer#getHighestPublishedSequence(long, long)}。
+ */
 public final class MultiProducerSequencer extends AbstractSequencer {
 
     private static final Unsafe UNSAFE = Util.getUnsafe();
@@ -25,12 +29,18 @@ public final class MultiProducerSequencer extends AbstractSequencer {
     private final Sequence gatingSequenceCache = new Sequence(Sequencer.INITIAL_CURSOR_VALUE);
 
     /**
-     * 有效的容量。
+     * 跟踪每个 Ring Buff 槽的有效容量。
      */
     private final int[] availableBuffer;
     private final int indexMask;
     private final int indexShift;
 
+    /**
+     * 指定大小和等待策略构建一个序列器
+     *
+     * @param bufferSize   缓冲区大小
+     * @param waitStrategy 等待策略
+     */
     public MultiProducerSequencer(int bufferSize, final WaitStrategy waitStrategy) {
         super(bufferSize, waitStrategy);
         availableBuffer = new int[bufferSize];
@@ -67,9 +77,12 @@ public final class MultiProducerSequencer extends AbstractSequencer {
 
     @Override
     public long getHighestPublishedSequence(long nextSequence, long availableSequence) {
-        return 0;
+
     }
 
+    /**
+     * @see #hasAvailableCapacity(Sequence[], int, long)
+     */
     @Override
     public boolean hasAvailableCapacity(int requiredCapacity) {
         return hasAvailableCapacity(gatingSequences, requiredCapacity, cursor.get());
@@ -77,7 +90,7 @@ public final class MultiProducerSequencer extends AbstractSequencer {
 
     @Override
     public long remainingCapacity() {
-        return 0;
+
     }
 
     /**
@@ -130,12 +143,25 @@ public final class MultiProducerSequencer extends AbstractSequencer {
 
     @Override
     public long tryNext() throws InsufficientCapacityException {
-        return 0;
+        return tryNext(1);
     }
 
     @Override
     public long tryNext(int n) throws InsufficientCapacityException {
-        return 0;
+        if (n < 1) {
+            throw new IllegalArgumentException("n must be > 0");
+        }
+        long current;
+        long next;
+
+        do {
+            current = cursor.get();
+            next = current + n;
+            if (!hasAvailableCapacity(gatingSequences, n, current)) {
+                throw InsufficientCapacityException.INSTANCE;
+            }
+        } while (!cursor.compareAndSet(current, next));
+        return next;
     }
 
     @Override
@@ -149,12 +175,12 @@ public final class MultiProducerSequencer extends AbstractSequencer {
     }
 
     /**
-     * 是否还有有效容量
+     * 判断当前序号是否有效容量
      *
      * @param gatingSequences  序列游标
      * @param requiredCapacity 需要容量
      * @param cursorValue      当前游标值
-     * @return 是否还有有效容量
+     * @return 是否有效容量
      */
     private boolean hasAvailableCapacity(Sequence[] gatingSequences, final int requiredCapacity, long cursorValue) {
         long wrapPoint = (cursorValue + requiredCapacity) - bufferSize;

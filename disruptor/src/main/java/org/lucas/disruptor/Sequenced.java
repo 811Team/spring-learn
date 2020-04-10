@@ -26,10 +26,13 @@ public interface Sequenced {
     long remainingCapacity();
 
     /**
-     * @return 按顺序的下一个值
+     * @return 按顺序获取下一个事件序列号
      */
     long next();
 
+    /**
+     * @return 声明接下来要发布 n 个事件。用于批量事件生成的。
+     */
     long next(int n);
 
     /**
