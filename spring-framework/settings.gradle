@@ -6,7 +6,10 @@ include 'spring-webmvc'
 include 'spring-context'
 include 'spring-beans'
 include 'spring-jcl'
+include 'spring-aop'
 
 rootProject.children.each {project ->
     project.buildFileName = "${project.name}.gradle"
 }
+
+

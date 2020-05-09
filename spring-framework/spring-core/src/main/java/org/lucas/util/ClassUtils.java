@@ -3,6 +3,8 @@ package org.lucas.util;
 import org.lucas.lang.Nullable;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,13 +19,19 @@ import java.util.Set;
  */
 public abstract class ClassUtils {
 
-    /** 数组后缀符号 */
+    /**
+     * 数组后缀符号
+     */
     public static final String ARRAY_SUFFIX = "[]";
 
-    /** 内部数组前缀名 */
+    /**
+     * 内部数组前缀名
+     */
     private static final String INTERNAL_ARRAY_PREFIX = "[";
 
-    /** 非基础数组类型前缀 */
+    /**
+     * 非基础数组类型前缀
+     */
     private static final String NON_PRIMITIVE_ARRAY_PREFIX = "[L";
 
     /**
@@ -239,4 +247,75 @@ public abstract class ClassUtils {
         }
         return cl;
     }
+
+
+    public static Method getMostSpecificMethod(Method method, @Nullable Class<?> targetClass) {
+        // 目标对象和目标方法是否可以重写
+        if (targetClass != null && targetClass != method.getDeclaringClass() && isOverridable(method, targetClass)) {
+            try {
+                // public 方法判断
+                if (Modifier.isPublic(method.getModifiers())) {
+                    try {
+                        // 获取目标对象的重写方法
+                        return targetClass.getMethod(method.getName(), method.getParameterTypes());
+                    } catch (NoSuchMethodException ex) {
+                        return method;
+                    }
+                } else {
+                    Method specificMethod =
+                            ReflectionUtils.findMethod(targetClass, method.getName(), method.getParameterTypes());
+                    return (specificMethod != null ? specificMethod : method);
+                }
+            } catch (SecurityException ex) {
+                // Security settings are disallowing reflective access; fall back to 'method' below.
+            }
+        }
+        return method;
+    }
+
+    /**
+     * 通过类型获取包名
+     *
+     * @param clazz 类型
+     * @return 包名
+     */
+    public static String getPackageName(Class<?> clazz) {
+        Assert.notNull(clazz, "Class must not be null");
+        return getPackageName(clazz.getName());
+    }
+
+    /**
+     * 通过类全名获取包名
+     *
+     * @param fqClassName 类全名
+     * @return 包名
+     */
+    public static String getPackageName(String fqClassName) {
+        Assert.notNull(fqClassName, "Class name must not be null");
+        int lastDotIndex = fqClassName.lastIndexOf(PACKAGE_SEPARATOR);
+        return (lastDotIndex != -1 ? fqClassName.substring(0, lastDotIndex) : "");
+    }
+
+    /**
+     * 判断方法或对象的方法是否可以重写
+     *
+     * @param method      方法
+     * @param targetClass 目标对象
+     * @return {@code true} 可以重写
+     */
+    private static boolean isOverridable(Method method, @Nullable Class<?> targetClass) {
+        // 判断方法是否 private，如果是则不是可以重写的方法
+        if (Modifier.isPrivate(method.getModifiers())) {
+            return false;
+        }
+        // 判断方法是否 public 或 protected，如果是则可以重写
+        if (Modifier.isPublic(method.getModifiers()) || Modifier.isProtected(method.getModifiers())) {
+            return true;
+        }
+        // 该方法申明的对象跟目标对象是否在同一个包下，如果是，则可以重写
+        return (targetClass == null ||
+                getPackageName(method.getDeclaringClass()).equals(getPackageName(targetClass)));
+    }
+
+
 }

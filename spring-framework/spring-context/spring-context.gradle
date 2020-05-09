@@ -1,6 +1,7 @@
 description = "Spring Context"
 
 dependencies {
+    compile(project(":spring-aop"))
     compile(project(":spring-beans"))
     compile(project(':spring-core'))
     optional("javax.enterprise.concurrent:javax.enterprise.concurrent-api:1.0")

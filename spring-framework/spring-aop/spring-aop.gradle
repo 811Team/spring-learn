@@ -1,0 +1,6 @@
+description = "Spring Aop"
+
+dependencies {
+    compile(project(":spring-core"))
+
+}

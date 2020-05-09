@@ -17,8 +17,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
 
+    /**
+     * 默认容量
+     */
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
 
+    /**
+     * 默认负载因子
+     */
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
     /**
@@ -36,8 +42,19 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
      */
     private static final int MAXIMUM_SEGMENT_SIZE = 1 << 30;
 
+    /**
+     * 默认引用类型
+     * 1. ReferenceType.SOFT： 软引用，有用但并非必需的对象。软引用关联的对象，
+     * 在系统发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。
+     * <p>
+     * 2. ReferenceType.WEAK： 弱引用，非必需的对象。弱引用关联的对象只能生存到
+     * 下一次垃圾收集发生之前，当垃圾收集器工作时，无论当前内存是否足够，都将回收掉只被弱引用关联的对象。
+     */
     private static final ReferenceType DEFAULT_REFERENCE_TYPE = ReferenceType.SOFT;
 
+    /**
+     * 负荷因子
+     */
     private final float loadFactor;
 
     /**
@@ -45,8 +62,14 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
      */
     private final int shift;
 
+    /**
+     * 分段
+     */
     private final Segment[] segments;
 
+    /**
+     * 引用类型
+     */
     private final ReferenceType referenceType;
 
     public ConcurrentReferenceHashMap() {

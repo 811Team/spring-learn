@@ -1,7 +1,12 @@
 package org.lucas.util;
 
+import org.lucas.lang.Nullable;
+
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description:用于处理反射API和处理的简单实用程序类
@@ -9,6 +14,8 @@ import java.lang.reflect.Modifier;
  * author: Zhou mingxiang
  */
 public abstract class ReflectionUtils {
+
+    private static final Map<Class<?>, Method[]> declaredMethodsCache = new ConcurrentReferenceHashMap<>(256);
 
     /**
      * 为给定的类和参数获取一个可访问构造函数
@@ -34,9 +41,9 @@ public abstract class ReflectionUtils {
     /**
      * 设置对应构造函数访问权限
      *
-     *
      * @param ctor 构造函数
      */
+    @SuppressWarnings("deprecation")  // on JDK 9
     public static void makeAccessible(Constructor<?> ctor) {
 
         //ctor.getModifiers():返回此类或接口以整数编码的 Java语言修饰符(返回一个int型的返回值，代表类、成员变量、方法的修饰符)
@@ -44,7 +51,7 @@ public abstract class ReflectionUtils {
         //ctor.isAccessible(): 获得构造函数的 accessible 标志的值
 
 
-        //如果构造函数的修饰符不为public或者构造函数的声明类修饰符不为public或者构造函数的 accessible 标志值不存在
+        //如果构造函数的修饰符不为 public 或者构造函数的声明类修饰符不为 public 或者构造函数的 accessible 标志值不存在
         if ((!Modifier.isPublic(ctor.getModifiers()) ||
                 !Modifier.isPublic(ctor.getDeclaringClass().getModifiers())) && !ctor.isAccessible()) {
 
@@ -52,4 +59,10 @@ public abstract class ReflectionUtils {
             ctor.setAccessible(true);
         }
     }
+
+    @Nullable
+    public static Method findMethod(Class<?> clazz, String name, @Nullable Class<?>... paramTypes) {
+
+    }
+
 }
