@@ -1,12 +1,13 @@
 rootProject.name = 'spring-framework'
 
+include 'spring-aop'
+include 'spring-aspects'
+include 'spring-beans'
 include 'spring-core'
+include 'spring-context'
+include 'spring-jcl'
 include 'spring-web'
 include 'spring-webmvc'
-include 'spring-context'
-include 'spring-beans'
-include 'spring-jcl'
-include 'spring-aop'
 
 rootProject.children.each {project ->
     project.buildFileName = "${project.name}.gradle"
