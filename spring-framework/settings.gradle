@@ -1,5 +1,16 @@
-rootProject.name = 'spring-framework'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo.spring.io/plugins-release' }
+    }
+}
 
+plugins {
+    id "com.gradle.enterprise" version "3.2"
+    id "io.spring.gradle-enterprise-conventions" version "0.0.2"
+}
+
+include 'framework-bom'
 include 'spring-aop'
 include 'spring-aspects'
 include 'spring-beans'
@@ -9,8 +20,9 @@ include 'spring-jcl'
 include 'spring-web'
 include 'spring-webmvc'
 
+rootProject.name = 'spring'
+
 rootProject.children.each {project ->
     project.buildFileName = "${project.name}.gradle"
 }
-
 

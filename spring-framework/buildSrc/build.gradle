@@ -1,0 +1,27 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    mavenCentral()
+    // gradle 插件库
+    gradlePluginPortal()
+}
+
+dependencies {
+    implementation "me.champeau.gradle:japicmp-gradle-plugin:0.2.8"
+}
+
+gradlePlugin {
+    // 自定义插件
+    plugins {
+        compileConventionsPlugin {
+            id = "org.lucas.build.compile"
+            implementationClass = "org.lucas.build.compile.CompilerConventionsPlugin"
+        }
+        optionalDependenciesPlugin {
+            id = "org.lucas.build.optional-dependencies"
+            implementationClass = "org.lucas.build.optional.OptionalDependenciesPlugin"
+        }
+    }
+}
