@@ -5,7 +5,6 @@ import org.lucas.core.io.ResourceLoader;
 
 /**
  * @create: 2018-01-26
- * @description:
  */
 public interface ResourceLoaderAware extends Aware {
 
