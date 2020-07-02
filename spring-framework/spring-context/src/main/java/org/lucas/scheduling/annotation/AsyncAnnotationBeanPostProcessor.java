@@ -1,16 +1,11 @@
 package org.lucas.scheduling.annotation;
 
-import org.lucas.aop.Advisor;
 import org.lucas.aop.framework.autoproxy.target.AbstractBeanFactoryAwareAdvisingPostProcessor;
-import org.lucas.lang.Nullable;
 
+/**
+ * 异步注解 @Async 处理器
+ */
 public class AsyncAnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAdvisingPostProcessor {
-
-    /**
-     * 切面
-     */
-    @Nullable
-    protected Advisor advisor;
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
@@ -21,7 +16,7 @@ public class AsyncAnnotationBeanPostProcessor extends AbstractBeanFactoryAwareAd
             advisor.setAsyncAnnotationType(this.asyncAnnotationType);
         }
         advisor.setBeanFactory(beanFactory);
-        // 保存切面
+        // 保存切面逻辑
         this.advisor = advisor;
     }
 

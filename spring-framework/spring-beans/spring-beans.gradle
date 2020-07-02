@@ -1,4 +1,7 @@
 description = "Spring Beans"
 
 dependencies {
+
+    compile(project(":spring-core"))
+
 }

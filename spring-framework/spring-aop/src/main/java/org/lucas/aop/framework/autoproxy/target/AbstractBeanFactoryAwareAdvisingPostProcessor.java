@@ -1,5 +1,6 @@
 package org.lucas.aop.framework.autoproxy.target;
 
+import org.lucas.aop.framework.AbstractAdvisingBeanPostProcessor;
 import org.lucas.beans.factory.BeanFactoryAware;
 
 public abstract class AbstractBeanFactoryAwareAdvisingPostProcessor extends AbstractAdvisingBeanPostProcessor
