@@ -2,6 +2,7 @@ package org.lucas.context.annotation;
 
 import org.lucas.beans.factory.BeanClassLoaderAware;
 import org.lucas.context.ResourceLoaderAware;
+import org.lucas.core.PriorityOrdered;
 
 /**
  * 用于解析注解类，并把其注册到 spring 容器中。
@@ -14,6 +15,7 @@ import org.lucas.context.ResourceLoaderAware;
  */
 public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPostProcessor,
         PriorityOrdered, ResourceLoaderAware, BeanClassLoaderAware, EnvironmentAware {
+
 
 
 }

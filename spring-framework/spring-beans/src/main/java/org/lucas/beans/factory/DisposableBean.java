@@ -1,9 +1,12 @@
 package org.lucas.beans.factory;
 
 /**
- * 单例对象销毁标记接口
+ * Spring 容器 bean 对象销毁标记接口
  */
 public interface DisposableBean {
 
+    /**
+     * 销毁方法
+     */
     void destroy() throws Exception;
 }
