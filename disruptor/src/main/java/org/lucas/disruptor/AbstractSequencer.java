@@ -14,19 +14,29 @@ public abstract class AbstractSequencer implements Sequencer {
             AtomicReferenceFieldUpdater.newUpdater(AbstractSequencer.class, Sequence[].class, "gatingSequences");
 
     /**
-     * 队列大小
+     * 序号生成器缓冲区大小
      */
     protected final int bufferSize;
 
+    /**
+     * 消费者等待策略
+     */
     protected final WaitStrategy waitStrategy;
 
     /**
-     * 序列游标
+     * 生产者的序列，表示生产者的进度。
      */
     protected final Sequence cursor = new Sequence(Sequencer.INITIAL_CURSOR_VALUE);
 
     /**
-     * 序列游标数组
+     * 网关Sequences，序号生成器必须和这些Sequence满足约束:
+     * cursor-bufferSize <= Min(gatingSequence)
+     * 即：所有的gatingSequences让出下一个插槽后，生产者才能获取该插槽。
+     * <p>
+     * 对于生产者来讲，它只需要关注消费链最末端的消费者的进度（因为它们的进度是最慢的）。
+     * 即：gatingSequences就是所有消费链末端的消费们所拥有的的Sequence。（想一想食物链）
+     * <p>
+     * 类似{@link ProcessingSequenceBarrier#cursorSequence}
      */
     protected volatile Sequence[] gatingSequences = new Sequence[0];
 
@@ -41,11 +51,19 @@ public abstract class AbstractSequencer implements Sequencer {
         this.waitStrategy = waitStrategy;
     }
 
+    /**
+     * @return 获取生产者的生产进度(已发布的最大序号)
+     * @see Sequencer#getCursor()
+     */
     @Override
     public final long getCursor() {
         return cursor.get();
     }
 
+    /**
+     *
+     * @return 获取缓冲区大小
+     */
     @Override
     public final int getBufferSize() {
         return bufferSize;
