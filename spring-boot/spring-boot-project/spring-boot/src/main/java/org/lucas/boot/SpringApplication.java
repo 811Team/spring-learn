@@ -1,5 +1,7 @@
 package org.lucas.boot;
 
+import org.springframework.core.io.ResourceLoader;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
