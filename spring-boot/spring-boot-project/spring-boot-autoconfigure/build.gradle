@@ -1,0 +1,12 @@
+plugins {
+	id "java-library"
+	id "org.jetbrains.kotlin.jvm"
+	id "org.springframework.boot.deployed"
+	id "org.springframework.boot.optional-dependencies"
+}
+
+description = "Spring Boot AutoConfigure"
+
+dependencies {
+
+}

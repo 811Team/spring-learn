@@ -13,7 +13,7 @@ nohttp {
 }
 
 allprojects {
-	group "org.springframework.boot"
+	group "org.lucas.boot"
 
 	repositories {
 		mavenCentral()
