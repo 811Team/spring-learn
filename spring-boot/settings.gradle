@@ -1,0 +1,50 @@
+pluginManagement {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+		maven {
+			url 'https://repo.spring.io/plugins-release'
+		}
+		if (version.endsWith('-SNAPSHOT')) {
+			maven { url "https://repo.spring.io/snapshot" }
+		}
+	}
+	resolutionStrategy {
+		eachPlugin {
+			if (requested.id.id == "org.jetbrains.kotlin.jvm") {
+				useVersion "${kotlinVersion}"
+			}
+			if (requested.id.id == "org.jetbrains.kotlin.plugin.spring") {
+				useVersion "${kotlinVersion}"
+			}
+		}
+	}
+}
+
+plugins {
+	id "com.gradle.enterprise" version "3.3.3"
+	id "io.spring.gradle-enterprise-conventions" version "0.0.3"
+}
+
+rootProject.name="spring-boot-build"
+
+settings.gradle.projectsLoaded {
+	gradleEnterprise {
+		buildScan {
+			if (settings.gradle.rootProject.hasProperty('buildJavaHome')) {
+				value('Build Java home', settings.gradle.rootProject.getProperty('buildJavaHome'))
+			}
+
+			settings.gradle.rootProject.getBuildDir().mkdirs()
+			new File(settings.gradle.rootProject.getBuildDir(), "build-scan-uri.txt").text = "build scan not generated"
+
+			buildScanPublished { scan ->
+				new File(settings.gradle.rootProject.getBuildDir(), "build-scan-uri.txt").text = "<${scan.buildScanUri}|build scan>\n"
+			}
+		}
+	}
+}
+
+include "spring-boot-project:spring-boot"
+include "spring-boot-project:spring-boot-autoconfigure"
+
