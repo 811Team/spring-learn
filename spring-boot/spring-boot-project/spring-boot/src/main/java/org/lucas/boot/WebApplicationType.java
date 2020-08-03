@@ -1,5 +1,7 @@
 package org.lucas.boot;
 
+import org.springframework.util.ClassUtils;
+
 public enum WebApplicationType {
 
     /**

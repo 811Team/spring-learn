@@ -1,6 +1,16 @@
 package org.lucas.boot.web.reactive.context;
 
-public class ReactiveWebServerApplicationContext {
+import org.lucas.boot.web.reactive.server.ReactiveWebServerFactory;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.util.StringUtils;
+
+public class ReactiveWebServerApplicationContext extends GenericReactiveWebApplicationContext
+        implements ConfigurableWebServerApplicationContext {
+
+    /**
+     * web服务器管理
+     */
+    private volatile WebServerManager serverManager;
 
     private void createWebServer() {
         WebServerManager serverManager = this.serverManager;
@@ -9,6 +19,7 @@ public class ReactiveWebServerApplicationContext {
             String webServerFactoryBeanName = getWebServerFactoryBeanName();
             ReactiveWebServerFactory webServerFactory = getWebServerFactory(webServerFactoryBeanName);
             boolean lazyInit = getBeanFactory().getBeanDefinition(webServerFactoryBeanName).isLazyInit();
+            // 构建 serverManager(包含Web服务器) 实例
             this.serverManager = new WebServerManager(this, webServerFactory, this::getHttpHandler, lazyInit);
             getBeanFactory().registerSingleton("webServerGracefulShutdown",
                     new WebServerGracefulShutdownLifecycle(this.serverManager));
@@ -35,6 +46,10 @@ public class ReactiveWebServerApplicationContext {
         }
         // 3 存在则获取第一个实例名称。
         return beanNames[0];
+    }
+
+    protected ReactiveWebServerFactory getWebServerFactory(String factoryBeanName) {
+        return getBeanFactory().getBean(factoryBeanName, ReactiveWebServerFactory.class);
     }
 
 }

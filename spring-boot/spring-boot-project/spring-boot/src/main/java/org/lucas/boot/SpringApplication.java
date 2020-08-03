@@ -1,12 +1,18 @@
 package org.lucas.boot;
 
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class SpringApplication {
+
+    private Set<Class<?>> primarySources;
+
+    private ResourceLoader resourceLoader;
 
     /**
      * 环境类型
