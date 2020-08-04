@@ -53,7 +53,7 @@ public class ReactiveWebServerApplicationContext extends GenericReactiveWebAppli
     }
 
     /**
-     * @return 获取应用程序上下文中 HttpHandler 的实现类
+     * @return 获取应用程序上下文中 HttpHandler 的实现类：HttpWebHandlerAdapter
      */
     protected HttpHandler getHttpHandler() {
         // 1 从 Bean 工厂中获取 HttpHandler 类型的 Bean 实例的名字

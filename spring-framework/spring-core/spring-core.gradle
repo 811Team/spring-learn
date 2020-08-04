@@ -2,5 +2,9 @@ description = "Spring Core"
 
 dependencies {
     compile(project(":spring-jcl"))
+
+    optional("io.projectreactor:reactor-core")
+
+    testCompile("io.projectreactor:reactor-test")
 }
 
