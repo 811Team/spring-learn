@@ -18,6 +18,7 @@ include 'spring-core'
 include 'spring-context'
 include 'spring-jcl'
 include 'spring-web'
+include 'spring-webflux'
 include 'spring-webmvc'
 
 rootProject.name = 'spring'

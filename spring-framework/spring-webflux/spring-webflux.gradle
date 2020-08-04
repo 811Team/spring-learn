@@ -1,0 +1,17 @@
+description = "Spring WebFlux"
+
+dependencies {
+    compile(project(":spring-beans"))
+    compile(project(":spring-core"))
+    compile(project(":spring-web"))
+
+    compile("io.projectreactor:reactor-core")
+
+    optional(project(":spring-context"))
+
+}
+
+test {
+    maxParallelForks = 4
+}
+
