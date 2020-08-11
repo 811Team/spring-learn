@@ -8,6 +8,12 @@ import org.lucas.util.ClassUtils;
 
 public abstract class AopUtils {
 
+    /**
+     * 获取被其代理的对象
+     *
+     * @param candidate
+     * @return
+     */
     public static Class<?> getTargetClass(Object candidate) {
         Assert.notNull(candidate, "Candidate object must not be null");
         Class<?> result = null;
